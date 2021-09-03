@@ -61,15 +61,15 @@ public class BoardController {
         {
             //remember read 서비스에 필요한 객체 멤버변수 set
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            board.setWrite_date(timestamp);
+            board.setWriteDate(timestamp);
             board.setMemId(member.getMemId());
-            mav.addObject("boards", boardService.boardRead(board));
+            mav.addObject("board", boardService.boardRead(board));
             //remember 조회수 기록 테이블 멤버변수 board 객체에서 get
             BoardRecord boardRecord = new BoardRecord();
             boardRecord.setPageNum(board.getNum());
             boardRecord.setMemId(board.getMemId());
             Date today = new Date(System.currentTimeMillis());
-            boardRecord.setRead_Time(today);
+            boardRecord.setReadTime(today);
             //remember 레코드 서비스 호출
             boardService.insert_Read_Record(board);
             boardService.select_Record(boardRecord, board);
@@ -108,7 +108,7 @@ public class BoardController {
         }
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        board.setWrite_date(timestamp);
+        board.setWriteDate(timestamp);
         Board brd = boardService.boardInsert(board);
         request.setAttribute("member", brd);
 
@@ -127,7 +127,7 @@ public class BoardController {
         }
         else {
             session.setAttribute("member", member);
-            mav.addObject("boards", boardService.boardRead(board));
+            mav.addObject("board", boardService.boardRead(board));
 
             mav.setViewName("member/board/modifyForm");
             return mav;
@@ -135,13 +135,17 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modify(Board board) {
+    public String modify(Board board, HttpSession session) {
+
+        Member member;
+
+        member = (Member) session.getAttribute("member");
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        board.setWrite_date(timestamp);
-        boardService.boardModify(board);
+        board.setWriteDate(timestamp);
+        boardService.boardModify(board, member);
 
-        if(board == null)
+        if(board.getTitle() == "" || board.getContent() == "")
             return "member/board/modifyForm";
 
         return "redirect:/member/board/list";
@@ -149,8 +153,8 @@ public class BoardController {
 
     @RequestMapping("/delete")
     public String delete(Board board) {
-        int Num = board.getNum();
-        boardService.boardDelete(Num);
+        int num = board.getNum();
+        boardService.boardDelete(num);
         return "redirect:/member/board/list";
     }
 }

@@ -8,7 +8,7 @@ import java.sql.Date;
 @Getter
 @Setter
 public class BoardRecord {
-    private Date read_Time;
+    private Date readTime;
     private int pageNum;
     private String memId;
 }

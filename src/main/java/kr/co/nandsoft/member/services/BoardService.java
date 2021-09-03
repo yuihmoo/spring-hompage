@@ -2,6 +2,7 @@ package kr.co.nandsoft.member.services;
 
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
+import kr.co.nandsoft.member.Member;
 import kr.co.nandsoft.member.dao.BoardDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,13 @@ public class BoardService implements IBoardService{
     }
 
     @Override
-    public List<Map<String, Object>> boardRead(Board board) {
+    public Map boardRead(Board board) {
         return dao.boardRead(board.getNum());
     }
 
     @Override
-    public void boardModify(Board board) {
-        dao.boardModify(board);
+    public void boardModify(Board board, Member member) {
+        dao.boardModify(board, member);
     }
 
     @Override

@@ -120,16 +120,18 @@
             <th>아이디</th>
             <th>제목</th>
             <th>작성일</th>
-            <th>최근 수정일</th>
             <th>조회수</th>
+            <th>최근 수정일</th>
+            <th>수정자</th>
         <c:forEach var="row" items="${boards}">
             <tr>
                 <td>${row.num}</td>
                 <td>${row.memId}</td>
                 <td><a href="<c:url value="/member/board/read?num=${row.num}&hit=${row.hit}"/>"/>${row.title}</td>
-                <td><fmt:formatDate value="${row.write_date}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
-                <td><fmt:formatDate value="${row.update_write_date}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                <td><fmt:formatDate value="${row.writeDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
                 <td>${row.hit}</td>
+                <td><fmt:formatDate value="${row.updateWriteDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                <td>${row.updateId}</td>
             </tr>
             </c:forEach>
     </table>

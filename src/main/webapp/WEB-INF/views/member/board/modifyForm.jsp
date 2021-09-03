@@ -9,9 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<c:forEach var="row" items="${boards}">
 <head>
-    <title>YJ HOMEPAGE : ${row.title}</title>
+    <title>YJ HOMEPAGE</title>
 </head>
 <body>
 <!doctype>
@@ -142,20 +141,20 @@
 <body>
 <div class="container">
     <header>
-        <h1>제목 : <input type="text" value="${row.title}" name="title"/></h1>
+        <h1>제목 : <input type="text" value="${board.get("title")}" name="title"/></h1>
     </header>
     <section class="content">
         <nav>
             <ul>
-                번호 : <input type="text" value="${row.Num}" readonly name="Num"/>
+                번호 : <input type="text" value="${board.get("num")}" readonly name="num"/>
             </ul>
             <ul>
-                작성자 : <input type="text" value="${row.memId}" readonly name="memId"/>
+                작성자 : <input type="text" value="${board.get("memId")}" readonly name="memId"/>
             </ul>
         </nav>
         <main>
             <p>내용</p>
-            <textarea name="content" rows="20" cols="150">${row.content}</textarea>
+            <textarea name="content" rows="20" cols="150">${board.get("content")}</textarea>
         </main>
     </section>
     <footer>
@@ -170,6 +169,5 @@
 </body>
 </form>
 </html>
-</c:forEach>
 </body>
 </html>

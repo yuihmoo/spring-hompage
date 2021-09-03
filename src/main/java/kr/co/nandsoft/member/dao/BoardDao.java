@@ -3,6 +3,7 @@ package kr.co.nandsoft.member.dao;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
+import kr.co.nandsoft.member.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,9 +24,9 @@ public class BoardDao implements IBoardDao {
 
     @Override
     public List<Board> boardListAll() {
-        //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법
+        //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법, v.1.2 status 추가 (활성화, 비활성화)
 
-        String sql = "SELECT * FROM board";
+        String sql = "SELECT * FROM board where status = true";
 
         List<Board> boardList = new ArrayList<>();
 
@@ -34,12 +35,13 @@ public class BoardDao implements IBoardDao {
         for (Map row : rows) {
             Board obj = new Board();
 
-            obj.setNum((Integer) row.get("Num"));
+            obj.setNum((Integer) row.get("num"));
             obj.setMemId((String) row.get("memId"));
             obj.setTitle((String) row.get("title"));
             obj.setContent(((String) row.get("content")));
-            obj.setWrite_date((Timestamp) row.get("time_stamp"));
-            obj.setUpdate_write_date((Timestamp) row.get("update_time_stamp"));
+            obj.setWriteDate((Timestamp) row.get("writeDate"));
+            obj.setUpdateWriteDate((Timestamp) row.get("updateWriteDate"));
+            obj.setUpdateId((String) row.get("updateId"));
             obj.setHit((Integer) row.get("hit"));
             boardList.add(obj);
         }
@@ -52,50 +54,60 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "INSERT INTO board (memId, title, content, time_stamp, update_time_stamp, hit) values (?,?,?,?,?,?)";
+        String sql = "INSERT INTO board (memId, title, content, writeDate, updateWriteDate, hit, updateId) values (?,?,?,?,?,?)";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, board.getMemId());
             pstmt.setString(2, board.getTitle());
             pstmt.setString(3, board.getContent());
-            pstmt.setTimestamp(4, board.getWrite_date());
-            pstmt.setTimestamp(5, board.getWrite_date());
+            pstmt.setTimestamp(4, board.getWriteDate());
+            pstmt.setTimestamp(5, board.getWriteDate());
             pstmt.setInt(6, 1);
+            pstmt.setString(7, board.getMemId());
         });
         return result;
     }
 
     @Override
-    public List<Map<String, Object>> boardRead(int Num) {
+    public Map<String, Object> boardRead(int num) {
         //remember return 문과 함께 쓸 수도 있다.
-        return this.template.queryForList(
-                "select * from board where Num = ?", Num);
+        /*
+        board =  this.template.queryForList(
+                "select * from board where Num = ?", Board.class, num);
+        return board;
+         */
+
+        String query = "select num, memid, title, content, writeDate, updateWriteDate, hit, status, authority, updateId from board where Num = ?";
+        return template.queryForMap(query, num);
     }
 
     @Override
-    public int boardModify(Board board) {
-
+    public int boardModify(Board board, Member member) {
         int result = 0;
+        //remember 같은 값일 때를 대비해 한번 초기화
+        this.template.update(
+                "update board set updateId = 1 WHERE num = ?", board.getNum());
 
-        final String sql = "UPDATE board SET title = ?, content = ?, update_time_stamp = ? WHERE Num = ?";
+        final String sql = "UPDATE board SET title = ?, content = ?, updateWriteDate = ?, updateId = ? WHERE Num = ?";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, board.getTitle());
             pstmt.setString(2, board.getContent());
-            pstmt.setTimestamp(3, board.getWrite_date());
-            pstmt.setInt(4, (board.getNum()));
+            pstmt.setTimestamp(3, board.getWriteDate());
+            pstmt.setString(4, member.getMemId());
+            pstmt.setInt(5, (board.getNum()));
         });
         return result;
     }
 //todo 단순히 데이터를 삭제 하는것이 아니라 Delete 삭제에 대한 고민이 필요함. (실제로 DB 삭제는 속도면에서 느리고 삭제된 데이터도 보관해야함.)
     @Override
     public void boardDelete(int Num) {
-        //remember 게시물 삭제 테이블로 복사 해놓고
+        //remember 게시물 삭제 테이블로 복사 해놓고 , v1.2 테이블 수정 작업으로 delete_board 테이블 삭제
+//        this.template.update(
+//                "insert into delete_board select * from board where Num = ?", Num);
+        //remember 실제 게시물 테이블에 삭제, v1.2 status = false 값으로 비활성화 상태 설정
         this.template.update(
-                "insert into delete_board select * from board where Num = ?", Num);
-        //remember 실제 게시물 테이블에 삭제
-        this.template.update(
-                "delete from board where Num = ?", Num);
+                "UPDATE board set status = false where Num = ?", Num);
     }
 
     @Override
@@ -104,7 +116,7 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "UPDATE board SET hit = hit+1 WHERE Num = ?";
+        String sql = "UPDATE board SET hit = hit+1 WHERE num = ?";
 
         result = template.update(sql, pstmt -> {
             pstmt.setInt(1, board.getNum());
@@ -117,10 +129,10 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "INSERT INTO board_record (read_Time, pageNum, memId) VALUE (?,?,?)";
+        String sql = "INSERT INTO board_record (readTime, pageNum, memId) VALUE (?,?,?)";
 
         result = template.update(sql, pstmt -> {
-            pstmt.setTimestamp(1, board.getWrite_date());
+            pstmt.setTimestamp(1, board.getWriteDate());
             pstmt.setInt(2, board.getNum());
             pstmt.setString(3, board.getMemId());
         });
@@ -136,9 +148,9 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "select read_Time from board_record WHERE read_Time = ? and pageNum = ? and memId = ?";
+        String sql = "select readTime from board_record WHERE readTime = ? and pageNum = ? and memId = ?";
 
-        List<Map<String, Object>> read_times = template.queryForList(sql, boardRecord.getRead_Time(), boardRecord.getPageNum(), boardRecord.getMemId());
+        List<Map<String, Object>> read_times = template.queryForList(sql, boardRecord.getReadTime(), boardRecord.getPageNum(), boardRecord.getMemId());
         System.out.println(read_times);
 
         int timesSize = read_times.size();
@@ -149,8 +161,8 @@ public class BoardDao implements IBoardDao {
             return boardHit(board);
         } else {
             //remember Map 의 key 값은 "String"!
-            Date afterTime = (Date) read_times.get(timesSize -1).get("read_Time");
-            Date beforeTime = (Date) read_times.get(timesSize -2).get("read_Time");
+            Date afterTime = (Date) read_times.get(timesSize -1).get("readTime");
+            Date beforeTime = (Date) read_times.get(timesSize -2).get("readTime");
 
             //remember String 을 비교할땐 "equals"!
             if (beforeTime.equals(afterTime)) {

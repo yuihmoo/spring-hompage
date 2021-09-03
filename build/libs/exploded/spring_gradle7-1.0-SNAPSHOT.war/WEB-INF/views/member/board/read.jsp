@@ -9,9 +9,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<c:forEach var="row" items="${boards}">
 <head>
-    <title>YJ HOMEPAGE : ${row.title}</title>
+    <title>${board.get("title")}</title>
 </head>
 <body>
     <!doctype>
@@ -131,27 +130,40 @@
                 font-family: "Century Gothic", 'Lato', sans-serif;
                 font-weight: bold;
             }
+            ul{
+                font-weight: bold;
+                font-family: "Century Gothic", 'Lato', sans-serif;
+            }
         </style>
     </head>
     <body>
     <div class="container">
         <header>
-            <h1>${row.title}</h1>
+            <h1>${board.get("title")}</h1>
         </header>
         <section class="content">
             <nav>
                 <ul>
-                    작성자 : ${row.memId}
+                    작성자 : ${board.get("memId")}
+                </ul>
+                <ul>
+                    작성일 : </br>${board.get("writeDate")}
+                </ul>
+                <ul>
+                    최근 수정일 : </br>${board.get("updateWriteDate")}
+                </ul>
+                <ul>
+                    조회수 : ${board.get("hit")}
                 </ul>
             </nav>
             <main>
-                ${row.content}
+                ${board.get("content")}
             </main>
         </section>
         <footer>
             <div class="et-hero-tabs-container">
-                <a class="et-hero-tab" hidden href="/member/board/modifyForm?num=${row.num}">수정</a>
-                <a class="et-hero-tab" hidden href="/member/board/delete?num=${row.num}">삭제</a>
+                <a class="et-hero-tab" hidden href="/member/board/modifyForm?num=${board.get("num")}">수정</a>
+                <a class="et-hero-tab" hidden href="/member/board/delete?num=${board.get("num")}">삭제</a>
                 <a class="et-hero-tab" href="/">MAIN</a>
                 <a class="et-hero-tab" href="/member/board/list">목록</a>
                 <span class="et-hero-tab-slider"></span>
@@ -160,6 +172,5 @@
     </div>
     </body>
     </html>
-</c:forEach>
 </body>
 </html>

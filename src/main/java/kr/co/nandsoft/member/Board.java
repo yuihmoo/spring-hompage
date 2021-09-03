@@ -8,11 +8,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class Board {
-    private int Num;
+    private int num;
     private String memId;
     private String title;
     private String content;
-    private Timestamp write_date;
-    private Timestamp update_write_date;
+    private Timestamp writeDate;
+    private Timestamp updateWriteDate;
     private int hit;
+    private boolean status;
+    private boolean authority;
+    private String updateId;
 }
