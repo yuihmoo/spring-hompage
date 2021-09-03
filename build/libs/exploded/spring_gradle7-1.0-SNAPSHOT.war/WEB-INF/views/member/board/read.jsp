@@ -59,28 +59,29 @@
             a {
                 text-decoration: none;
             }
-
-            .et-hero-tabs,
-            .et-slide {
+            .et-hero-tabs {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 height: 98vh;
                 position: relative;
-                background: #eee;
+                background-image: url("/images/alfons.jpg");
+                background-size: cover;
+                background-position-y: -250px;
                 text-align: center;
                 padding: 0 2em;
+            }
             h1 {
                 font-size: 3rem;
-                margin: 0;
-                letter-spacing: 3rem;
+                /*color: #e2e2e5;*/
             }
             h3 {
                 font-size: 1rem;
                 letter-spacing: 0.3rem;
                 opacity: 0.6;
-            }
+                font-weight: bold;
+                /*color: #c2c2c5;*/
             }
 
             .et-hero-tabs-container {
@@ -93,10 +94,6 @@
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
                 background: #fff;
                 z-index: 10;
-            &--top {
-                 position: fixed;
-                 top: 0;
-             }
             }
 
             .et-hero-tab {
@@ -108,11 +105,6 @@
                 letter-spacing: 0.1rem;
                 transition: all 0.5s ease;
                 font-size: 0.8rem;
-            &:hover {
-                 color:white;
-                 background: rgba(102,177,241,0.8);
-                 transition: all 0.5s ease;
-             }
             }
 
             .et-hero-tab-slider {
@@ -125,8 +117,8 @@
             }
 
             @media (min-width: 800px) {
-                .et-hero-tabs,
-                .et-slide {
+                .et-hero-tabs{
+                }
                 h1 {
                     font-size: 3rem;
                 }
@@ -136,6 +128,8 @@
             }
             .et-hero-tab {
                 font-size: 1rem;
+                font-family: "Century Gothic", 'Lato', sans-serif;
+                font-weight: bold;
             }
         </style>
     </head>

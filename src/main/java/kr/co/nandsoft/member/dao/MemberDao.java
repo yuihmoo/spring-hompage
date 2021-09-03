@@ -57,6 +57,12 @@ public class MemberDao implements IMemberDao {
     }
 
     @Override
+    public int memberCheckId(Member member) {
+        return this.template.update(
+                "select memId from member where memId = ?", member.getMemId());
+    }
+
+    @Override
     public int memberUpdate(final Member member) {
 
         int result = 0;
@@ -74,16 +80,11 @@ public class MemberDao implements IMemberDao {
 
     @Override
     public int memberDelete(final Member member) {
-
-        int result = 0;
-
-        final String sql = "DELETE member WHERE memId = ? AND memPw = ?";
-
-        result = template.update(sql, pstmt -> {
-            pstmt.setString(1, member.getMemId());
-            pstmt.setString(2, member.getMemPw());
-        });
-
-        return result;
+        //remember 삭제하기 전 복사
+        this.template.update(
+                "insert into delete_member select * from member where memId = ?", member.getMemId());
+        //remember 삭제하기
+        return this.template.update(
+                "delete from member where memId = ?", member.getMemId());
     }
 }

@@ -8,4 +8,5 @@ public interface IMemberDao {
     Member memberSelect(Member member);
     int memberUpdate(Member member);
     int memberDelete(Member member);
+    int memberCheckId(Member member);
 }

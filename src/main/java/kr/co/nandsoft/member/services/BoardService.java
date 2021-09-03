@@ -15,7 +15,6 @@ public class BoardService implements IBoardService{
     @Autowired
     BoardDao dao;
 
-
     @Override
     public List<Board> boardListAll() {
         List<Board> brd = dao.boardListAll();

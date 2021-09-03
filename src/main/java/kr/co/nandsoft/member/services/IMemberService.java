@@ -8,4 +8,5 @@ public interface IMemberService {
     Member memberSearch(Member member);
     Member memberModify(Member member);
     int memberRemove(Member member);
+    int memberCheckId(Member member);
 }

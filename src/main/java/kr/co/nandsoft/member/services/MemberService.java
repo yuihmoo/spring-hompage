@@ -66,5 +66,9 @@ public class MemberService implements IMemberService {
 
         return result;
     }
+    @Override
+    public int memberCheckId(Member member) {
+        return dao.memberCheckId(member);
+    }
 }
 

@@ -100,15 +100,14 @@ public class BoardDao implements IBoardDao {
 
     @Override
     public int boardHit(Board board) {
-        //remember 페이지 번호 = Num 으로 찾고 hit +1 해주기.
+        //remember 페이지 번호 = Num 으로 찾고 hit +1 해주기. v1.1(쿼리문 안에 hit+1로 바꾼이유는 동시에 접속하는 상황을 가정했을 때 생길 수 있는 트랜잭션 문제 때문.)
 
         int result = 0;
 
-        String sql = "UPDATE board SET hit = ? WHERE Num = ?";
+        String sql = "UPDATE board SET hit = hit+1 WHERE Num = ?";
 
         result = template.update(sql, pstmt -> {
-            pstmt.setInt(1, board.getHit() + 1);
-            pstmt.setInt(2, board.getNum());
+            pstmt.setInt(1, board.getNum());
         });
         return result;
     }

@@ -101,13 +101,15 @@ public class BoardController {
     @RequestMapping(value = "/write", method = RequestMethod.POST)
     public String write(@ModelAttribute("board") Board board, HttpServletRequest request) {
         //remember 글을 쓸때 Write_date 값도 set
+
+        if(board.getTitle().trim().length() == 0 || board.getContent().trim().length() == 0)
+        {
+            return "member/board/writeForm";
+        }
+
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         board.setWrite_date(timestamp);
         Board brd = boardService.boardInsert(board);
-
-        if(brd == null)
-            return "member/board/writeForm";
-
         request.setAttribute("member", brd);
 
         return "redirect:/member/board/list";
