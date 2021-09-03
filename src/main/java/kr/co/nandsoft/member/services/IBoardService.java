@@ -7,12 +7,12 @@ import kr.co.nandsoft.member.Member;
 import java.util.List;
 
 public interface IBoardService {
-    List<Board> boardListAll();
-    Board boardInsert(Board board);
-    Object boardRead(Board board);
-    void boardModify(Board board, Member member);
-    void boardDelete(int Num);
+    List<Board> allBoards();
+    Board insertBoard(Board board);
+    Object readBoard(Board board);
+    void modifyBoard(Board board, Member member);
+    void deleteBoard(int Num);
     void hit(Board board);
-    void insert_Read_Record(Board board);
-    void select_Record(BoardRecord boardRecord, Board board);
+    void insertReadRecord(Board board);
+    void selectRecord(BoardRecord boardRecord, Board board);
 }

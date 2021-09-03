@@ -23,8 +23,8 @@ public class MemberDao implements IMemberDao {
     public int memberInsert(final Member member) {
 
         int result = 0;
-
-        String sql = "INSERT INTO member (memId, memPw, memMail) values (?,?,?)";
+        //remember sha1 암호화 로직으로 저장. 원래는 WAS 단에서 암호화와 복호화가 이루어져야한다. 스프링 시큐리티 공부하기.
+        String sql = "INSERT INTO member (memId, memPw, memMail) values (?,sha1(?),?)";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, member.getMemId());
@@ -40,8 +40,8 @@ public class MemberDao implements IMemberDao {
     public Member memberSelect(Member member) {
 
         List<Member> members = null;
-
-        final String sql = "SELECT * FROM member WHERE memId = ? AND memPw = ?";
+        //remember sha1 암호화한 DB 값이랑 비교하기 위해 입력값 다시 암호화 sha1(?)
+        final String sql = "SELECT * FROM member WHERE memId = ? AND memPw = sha1(?)";
 
         members = template.query(sql, new Object[]{member.getMemId(), member.getMemPw()}, (rs, rowNum) -> {
             Member mem = new Member();

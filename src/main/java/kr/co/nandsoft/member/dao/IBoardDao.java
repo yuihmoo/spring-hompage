@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBoardDao {
-    List<Board> boardListAll();
-    int boardInsert(Board board);
-    Map<String, Object> boardRead(int num);
-    int boardModify(Board board, Member member);
-    void boardDelete(int Num);
-    int boardHit(Board board);
-    int insert_Read_Record(Board board);
-    int select_Record(BoardRecord boardRecord, Board board);
+    List<Board> allBoards();
+    int insertBoard(Board board);
+    Map<String, Object> readBoard(int num);
+    int modifyBoard(Board board, Member member);
+    void deleteBoard(int Num);
+    int hitBoard(Board board);
+    int insertReadRecord(Board board);
+    int selectRecord(BoardRecord boardRecord, Board board);
 }

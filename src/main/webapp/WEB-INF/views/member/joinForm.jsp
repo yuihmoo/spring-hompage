@@ -150,8 +150,7 @@
 			<div class="form">
 				<form>
 					<label for="memId">아이디</label>
-					<input type="text" id="memId" name="memId"><button type="button" class="id_over_button" onclick="id_overlap_check()">중복 확인</button>
-					<form id="server" action="result.jsp"></form>
+					<input type="text" id="memId" name="memId">
 					<label for="password">비밀번호</label>
 					<input type="password" id="password" name="memPw">
 					<label for="email">이메일</label>
@@ -163,14 +162,4 @@
 	</div>
 </div>
 </body>
-<script type="text/javascript">
-	window.onload = function () {
-
-		document.getElementById("memId").onclick = function () {
-			var fr = document.getElementById("server");
-			fr.action = "/member/";
-			fr.submit();
-		}
-	}
-</script>
 </html>

@@ -3,6 +3,7 @@ package kr.co.nandsoft.member.controller;
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
 import kr.co.nandsoft.member.Member;
+import kr.co.nandsoft.member.PageMaker;
 import kr.co.nandsoft.member.services.BoardService;
 import kr.co.nandsoft.member.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class BoardController {
 
 //remember 로그인 확인하고 리스트 불러오는거 기억하기.
     @RequestMapping("/list")
-    public ModelAndView list(HttpSession session, Member member) {
+    public ModelAndView list(HttpSession session, Member member, PageMaker paging) {
 
         ModelAndView mav = new ModelAndView();
         member = (Member) session.getAttribute("member");
@@ -40,7 +41,7 @@ public class BoardController {
             return mav;
         }
         else{
-            mav.addObject("boards", boardService.boardListAll());
+            mav.addObject("viewAll", boardService.allBoards());
             mav.setViewName("member/board/list");
             return mav;
         }
@@ -63,7 +64,7 @@ public class BoardController {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             board.setWriteDate(timestamp);
             board.setMemId(member.getMemId());
-            mav.addObject("board", boardService.boardRead(board));
+            mav.addObject("board", boardService.readBoard(board));
             //remember 조회수 기록 테이블 멤버변수 board 객체에서 get
             BoardRecord boardRecord = new BoardRecord();
             boardRecord.setPageNum(board.getNum());
@@ -71,8 +72,8 @@ public class BoardController {
             Date today = new Date(System.currentTimeMillis());
             boardRecord.setReadTime(today);
             //remember 레코드 서비스 호출
-            boardService.insert_Read_Record(board);
-            boardService.select_Record(boardRecord, board);
+            boardService.insertReadRecord(board);
+            boardService.selectRecord(boardRecord, board);
 
             mav.setViewName("member/board/read");
             session.setAttribute("member", member);
@@ -109,7 +110,7 @@ public class BoardController {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         board.setWriteDate(timestamp);
-        Board brd = boardService.boardInsert(board);
+        Board brd = boardService.insertBoard(board);
         request.setAttribute("member", brd);
 
         return "redirect:/member/board/list";
@@ -127,7 +128,7 @@ public class BoardController {
         }
         else {
             session.setAttribute("member", member);
-            mav.addObject("board", boardService.boardRead(board));
+            mav.addObject("board", boardService.readBoard(board));
 
             mav.setViewName("member/board/modifyForm");
             return mav;
@@ -143,7 +144,7 @@ public class BoardController {
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         board.setWriteDate(timestamp);
-        boardService.boardModify(board, member);
+        boardService.modifyBoard(board, member);
 
         if(board.getTitle() == "" || board.getContent() == "")
             return "member/board/modifyForm";
@@ -154,7 +155,7 @@ public class BoardController {
     @RequestMapping("/delete")
     public String delete(Board board) {
         int num = board.getNum();
-        boardService.boardDelete(num);
+        boardService.deleteBoard(num);
         return "redirect:/member/board/list";
     }
 }

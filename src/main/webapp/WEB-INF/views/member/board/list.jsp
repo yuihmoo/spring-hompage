@@ -123,7 +123,7 @@
             <th>조회수</th>
             <th>최근 수정일</th>
             <th>수정자</th>
-        <c:forEach var="row" items="${boards}">
+        <c:forEach var="row" items="${viewAll}">
             <tr>
                 <td>${row.num}</td>
                 <td>${row.memId}</td>
@@ -142,14 +142,5 @@
         </div>
     </section>
     </body>
-    <script type="text/javascript">
-        var checked = document.getElementById("box${row.num}");
-        function update() {
-            var form = document.createElement("form");
-            form.setAttribute("method", "Post");
-            form.setAttribute("action", "/member/board/modifyForm?num=${checked}");
-            form.submit();
-        }
-    </script>
 </form>
 </html>

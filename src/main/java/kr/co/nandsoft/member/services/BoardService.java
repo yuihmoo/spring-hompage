@@ -17,15 +17,15 @@ public class BoardService implements IBoardService{
     BoardDao dao;
 
     @Override
-    public List<Board> boardListAll() {
-        List<Board> brd = dao.boardListAll();
+    public List<Board> allBoards() {
+        List<Board> brd = dao.allBoards();
 
         return brd;
     }
 
     @Override
-    public Board boardInsert(Board board) {
-        int result = dao.boardInsert(board);
+    public Board insertBoard(Board board) {
+        int result = dao.insertBoard(board);
 
         if (result == 0) {
             System.out.println("Write Fail!!");
@@ -36,30 +36,30 @@ public class BoardService implements IBoardService{
     }
 
     @Override
-    public Map boardRead(Board board) {
-        return dao.boardRead(board.getNum());
+    public Map readBoard(Board board) {
+        return dao.readBoard(board.getNum());
     }
 
     @Override
-    public void boardModify(Board board, Member member) {
-        dao.boardModify(board, member);
+    public void modifyBoard(Board board, Member member) {
+        dao.modifyBoard(board, member);
     }
 
     @Override
-    public void boardDelete(int Num) {
-        dao.boardDelete(Num);
+    public void deleteBoard(int Num) {
+        dao.deleteBoard(Num);
     }
     @Override
     public void hit(Board board) {
-        dao.boardHit(board);
+        dao.hitBoard(board);
     }
 
     @Override
-    public void insert_Read_Record(Board board) {
-        dao.insert_Read_Record(board);
+    public void insertReadRecord(Board board) {
+        dao.insertReadRecord(board);
     }
     @Override
-    public void select_Record(BoardRecord boardRecord, Board board) {
-        dao.select_Record(boardRecord, board);
+    public void selectRecord(BoardRecord boardRecord, Board board) {
+        dao.selectRecord(boardRecord, board);
     }
 }

@@ -61,6 +61,7 @@ public class MemberController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String memLogin(Member member, HttpSession session) {
         Member mem = service.memberSearch(member);
+
         if(mem == null)
             return "member/loginForm";
 
