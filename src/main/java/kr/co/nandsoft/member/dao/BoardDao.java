@@ -3,50 +3,56 @@ package kr.co.nandsoft.member.dao;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
+import kr.co.nandsoft.member.Criteria;
 import kr.co.nandsoft.member.Member;
+import org.apache.ibatis.annotations.Param;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 public class BoardDao implements IBoardDao {
 
+    @Resource
+    SqlSessionTemplate sessionTemplate;
+
     private JdbcTemplate template;
 
     public BoardDao(ComboPooledDataSource dataSource) {
-        this.template = new JdbcTemplate(dataSource);
+        this.template = new JdbcTemplate();
     }
 
     @Override
-    public List<Board> allBoards() {
+    public int countAll(Criteria cri) {
         //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법, v.1.2 status 추가 (활성화, 비활성화)
         //remember authority 란 관리자의 권한 여부를 말한다. (공지사항 = 0, 나머지 = 1) 본인 글은 본인만 권한을 가지고 관리자는 모든 게시글에 권한이 있다.
+        return sessionTemplate.update("board.countAll");
 
-        String sql = "SELECT * FROM board where status = true";
-
-        List<Board> boardList = new ArrayList<>();
-
-        List<Map<String, Object>> rows = template.queryForList(sql);
-
-        for (Map row : rows) {
-            Board obj = new Board();
-
-            obj.setNum((Integer) row.get("num"));
-            obj.setMemId((String) row.get("memId"));
-            obj.setTitle((String) row.get("title"));
-            obj.setContent(((String) row.get("content")));
-            obj.setWriteDate((Timestamp) row.get("writeDate"));
-            obj.setUpdateWriteDate((Timestamp) row.get("updateWriteDate"));
-            obj.setUpdateId((String) row.get("updateId"));
-            obj.setHit((Integer) row.get("hit"));
-            boardList.add(obj);
-        }
-        return boardList;
+//        String sql = "SELECT num, memId, title, content, status, authority, hit, writeDate, updateWriteDate, updateId, boardNum FROM board where status = true";
+//
+//        List<Board> boardList = new ArrayList<>();
+//
+//        List<Map<String, Object>> rows = template.queryForList(sql);
+//
+//        for (Map row : rows) {
+//            Board obj = new Board();
+//
+//            obj.setNum((Integer) row.get("num"));
+//            obj.setMemId((String) row.get("memId"));
+//            obj.setTitle((String) row.get("title"));
+//            obj.setContent(((String) row.get("content")));
+//            obj.setWriteDate((Timestamp) row.get("writeDate"));
+//            obj.setUpdateWriteDate((Timestamp) row.get("updateWriteDate"));
+//            obj.setUpdateId((String) row.get("updateId"));
+//            obj.setHit((Integer) row.get("hit"));
+//            boardList.add(obj);
+//        }
+//        return boardList;
     }
 
     @Override
@@ -126,7 +132,7 @@ public class BoardDao implements IBoardDao {
     }
 //todo board 객체말고 boardRecord 객체로 바꿔야함. (정리 필요 )
     @Override
-    public int insertReadRecord(Board board) {
+    public int insertRecord(Board board) {
 
         int result = 0;
 
@@ -172,6 +178,13 @@ public class BoardDao implements IBoardDao {
                 return hitBoard(board);
             }
         }
+    }
+    @Override
+    public List<Board> selectPage (Criteria cri) {
+        Map<String, Integer> params = null;
+        params.put("page", cri.getPage());
+        params.put("perPageNum", cri.getPerPageNum());
+        return sessionTemplate.selectList("selectPage", params);
     }
 }
 //        System.out.println(beforeTime);

@@ -110,7 +110,7 @@
     <a class="et-hero-tab" href="/member/modifyForm">회원정보</a>
     <a class="et-hero-tab" href="/member/logout">로그아웃</a>
     <a class="et-hero-tab" href="/member/removeForm">회원탈퇴</a>
-    <a class="et-hero-tab" href="/member/board/list">게시판</a>
+    <a class="et-hero-tab" href="/member/board/listPage">게시판</a>
     <a class="et-hero-tab" href="/member/board/writeForm">글쓰기</a>
     <span class="et-hero-tab-slider"></span>
   </div>

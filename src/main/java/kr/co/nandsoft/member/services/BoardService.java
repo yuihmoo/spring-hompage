@@ -2,6 +2,7 @@ package kr.co.nandsoft.member.services;
 
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
+import kr.co.nandsoft.member.Criteria;
 import kr.co.nandsoft.member.Member;
 import kr.co.nandsoft.member.dao.BoardDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,8 @@ public class BoardService implements IBoardService{
     BoardDao dao;
 
     @Override
-    public List<Board> allBoards() {
-        List<Board> brd = dao.allBoards();
-
-        return brd;
+    public int countAll(Criteria cri) {
+        return dao.countAll(cri);
     }
 
     @Override
@@ -55,11 +54,15 @@ public class BoardService implements IBoardService{
     }
 
     @Override
-    public void insertReadRecord(Board board) {
-        dao.insertReadRecord(board);
+    public void insertRecord(Board board) {
+        dao.insertRecord(board);
     }
     @Override
     public void selectRecord(BoardRecord boardRecord, Board board) {
         dao.selectRecord(boardRecord, board);
+    }
+    @Override
+    public List<Board> selectPage(Criteria cri) {
+        return dao.selectPage(cri);
     }
 }

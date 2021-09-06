@@ -88,7 +88,7 @@ public class MemberController {
         Member member = (Member) session.getAttribute("member");
 
         ModelAndView mav = new ModelAndView();
-        mav.addObject("member", service.memberSearch(member));
+        mav.addObject("member", member);
 
         mav.setViewName("member/modifyForm");
 

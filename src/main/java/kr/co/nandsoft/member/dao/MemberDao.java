@@ -67,7 +67,7 @@ public class MemberDao implements IMemberDao {
 
         int result = 0;
 
-        final String sql = "UPDATE member SET memPw = ?, memMail = ? WHERE memId = ?";
+        final String sql = "UPDATE member SET memPw = sha1(?), memMail = ? WHERE memId = ?";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, member.getMemPw());

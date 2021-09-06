@@ -1,13 +1,12 @@
 package kr.co.nandsoft.member.controller;
 
-import kr.co.nandsoft.member.Board;
-import kr.co.nandsoft.member.BoardRecord;
-import kr.co.nandsoft.member.Member;
-import kr.co.nandsoft.member.PageMaker;
+import kr.co.nandsoft.member.*;
 import kr.co.nandsoft.member.services.BoardService;
 import kr.co.nandsoft.member.services.MemberService;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
 import java.sql.Timestamp;
+import org.apache.log4j.Logger;
 
 @Controller
 @RequestMapping("/member/board")
@@ -29,21 +29,34 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
+    @Autowired
+    private SqlSessionFactory sqlFactory;
+
+    private Logger logger = Logger.getLogger(Criteria.class);
+
+
 //remember 로그인 확인하고 리스트 불러오는거 기억하기.
-    @RequestMapping("/list")
-    public ModelAndView list(HttpSession session, Member member, PageMaker paging) {
+    @RequestMapping(value = "/listPage", method = RequestMethod.GET)
+    public String list(@ModelAttribute("cri")Criteria cri, Model model, HttpSession session, Member member, Board board) {
 
-        ModelAndView mav = new ModelAndView();
         member = (Member) session.getAttribute("member");
+//        sqlFactory.openSession();
+//        System.out.println("ok");
 
-        if(member == null) {
-            mav.setViewName("member/loginForm");
-            return mav;
+        if (member == null) {
+            return "member/loginForm";
         }
         else{
-            mav.addObject("viewAll", boardService.allBoards());
-            mav.setViewName("member/board/list");
-            return mav;
+            logger.info(cri.toString());
+
+            model.addAttribute("list", boardService.selectPage(cri));  // 게시판의 글 리스트
+            PageMaker pageMaker = new PageMaker();
+            pageMaker.setCri(cri);
+            pageMaker.setTotalCount(boardService.countAll(cri));
+
+            model.addAttribute("pageMaker", pageMaker);  // 게시판 하단의 페이징 관련, 이전페이지, 페이지 링크 , 다음 페이지
+
+            return "/member/board/listPage";
         }
     }
 
@@ -72,7 +85,7 @@ public class BoardController {
             Date today = new Date(System.currentTimeMillis());
             boardRecord.setReadTime(today);
             //remember 레코드 서비스 호출
-            boardService.insertReadRecord(board);
+            boardService.insertRecord(board);
             boardService.selectRecord(boardRecord, board);
 
             mav.setViewName("member/board/read");
@@ -113,7 +126,7 @@ public class BoardController {
         Board brd = boardService.insertBoard(board);
         request.setAttribute("member", brd);
 
-        return "redirect:/member/board/list";
+        return "list";
     }
 
     @RequestMapping(value = "/modifyForm")
@@ -149,13 +162,13 @@ public class BoardController {
         if(board.getTitle() == "" || board.getContent() == "")
             return "member/board/modifyForm";
 
-        return "redirect:/member/board/list";
+        return "list";
     }
 
     @RequestMapping("/delete")
     public String delete(Board board) {
         int num = board.getNum();
         boardService.deleteBoard(num);
-        return "redirect:/member/board/list";
+        return "list";
     }
 }
