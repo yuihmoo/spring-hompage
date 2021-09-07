@@ -4,12 +4,13 @@ import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
 import kr.co.nandsoft.member.Member;
 import kr.co.nandsoft.member.Criteria;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IBoardDao {
-    int countAll(Criteria cri);
+    int countAll();
     int insertBoard(Board board);
     Map<String, Object> readBoard(int num);
     int modifyBoard(Board board, Member member);
@@ -17,5 +18,5 @@ public interface IBoardDao {
     int hitBoard(Board board);
     int insertRecord(Board board);
     int selectRecord(BoardRecord boardRecord, Board board);
-    List<Board> selectPage(Criteria cri);
+    List<Map<String, Object>> selectPage(Criteria cri);
 }

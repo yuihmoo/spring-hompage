@@ -22,10 +22,14 @@ public class PageMaker {
     }
     public void calcDate() {
         endPage = (int) (Math.ceil(cri.getPage() / (double) displayPageNum) * displayPageNum);
+
         startPage = (endPage - displayPageNum) + 1;
+        if(startPage <= 0) startPage = 1;
+
         int tempEndPage = (int) (Math.ceil(totalCount / (double) cri.getPerPageNum()));
-        if(endPage > tempEndPage) {
+        if (endPage > tempEndPage) {
             endPage = tempEndPage;
+
         }
 
         prev = startPage == 1 ? false : true;

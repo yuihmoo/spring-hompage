@@ -1,101 +1,180 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <head>
-    <title>게시판예제-페이징</title>
+    <title>게시판 목록</title>
 </head>
+<style>
+    body, h1 {
+        font-family: "Century Gothic", 'Lato', sans-serif;
+        color: #000000;
+    }
+    .et-hero-tabs{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 98vh;
+        position: relative;
+        text-align: center;
+        padding: 0 2em;
+        border: 1px #2D2F36;
+        background-image: url("/images/alfons.jpg");
+        background-size: cover;
+        /*background-position-y: -140px;*/
+    }
+    th{
+        padding: 32px;
+        border: 1px #000000;
+        outline-style: auto;
+    }
+    td{
+        padding: 16px;
+        border: 1px #000000;
+        outline-style: none;
+    }
+    a{
+        color: #000000;
+    }
+    .et-hero-tabs {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 98vh;
+        position: relative;
+        background-image: url("/images/frame.jpg");
+        background-size: cover;
+        background-position-y: -250px;
+        text-align: center;
+        padding: 0 2em;
+    }
+    h1 {
+        font-size: 3rem;
+        /*color: #e2e2e5;*/
+    }
+    h3 {
+        font-size: 1rem;
+        letter-spacing: 0.3rem;
+        opacity: 0.6;
+        font-weight: bold;
+        /*color: #c2c2c5;*/
+    }
 
+    .et-hero-tabs-container {
+        display: flex;
+        flex-direction: row;
+        position: page;
+        bottom: 0;
+        width: 100%;
+        height: 70px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        background: #fff;
+        z-index: 10;
+    }
 
-<div layout:fragment="content">
+    .et-hero-tab {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        color: #000;
+        letter-spacing: 0.1rem;
+        transition: all 0.5s ease;
+        font-size: 0.8rem;
+    }
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                게시판 페이징 적용
-                <small>advanced tables</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li><a href="#">Tables</a></li>
-                <li class="active">Data tables</li>
-            </ol>
-        </section>
-        <!-- Main content -->
-        <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
+    .et-hero-tab-slider {
+        position: absolute;
+        bottom: 0;
+        width: 0;
+        height: 6px;
+        background: #66B1F1;
+        transition: left 0.3s ease;
+    }
 
-                    <div class="box">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">게시판 + 페이징</h3>
-
-                            <div class="box-tools">
-                                <div class="input-group input-group-sm" style="width: 150px;">
-                                    <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                                    <div class="input-group-btn">
-                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th style="width: 10px">BNO</th>
-                                    <th>TITLE</th>
-                                    <th style="width: 200px">WRITER</th>
-                                    <th style="width: 200px">REGDATE</th>
-                                    <th style="width: 40px">VIEWCNT</th>
-                                </tr>
-
-                                <tr th:each="board : ${list}">
-                                    <td th:text="${board.num}">BNO</td>
-                                    <td><a th:href="@{/member/board/read(num=${board.num},page=${pageMaker.cri.page},perPageNum=${pageMaker.cri.perPageNum})}" th:text="${board.title}">TITLE</a></td>
-                                    <td th:text="${board.writeDate}">WRITER</td>
-                                    <td th:text="${dates.format(board.updateWriteDate, 'yyyy-MM-dd HH:mm')}">REGDATE</td>
-                                    <td th:text="${board.content}">VIEWCNT</td>
-                                </tr>
-
-                            </table>
-                        </div>
-                        <!-- /.box-body -->
-
-                        <!-- 게시판 하단의 페이징 버튼 -->
-                        <div class="box-footer clearfix">
-                            <ul class="pagination pagination-sm no-margin pull-right">
-
-                                <li th:if="${pageMaker.prev} == true">
-                                    <a th:href="@{/member/board/listPage(page=${pageMaker.startPage}-1,perPageNum=${pageMaker.cri.perPageNum})}">&laquo;</a>
-                                </li>
-
-                                <li th:each="idx,iterStat : ${#numbers.sequence(pageMaker.startPage,pageMaker.endPage)}"  th:classappend="${pageMaker.cri.page} == ${num} ? active : null">
-                                    <a th:href="@{/member/board/listPage(page=${num},perPageNum=${pageMaker.cri.perPageNum})}" th:text="${num}"></a>
-                                </li>
-
-                                <li th:if="${pageMaker.next} == true and ${pageMaker.endPage > 0}">
-                                    <a th:href="@{/member/board/listPage(page=${pageMaker.endPage}+1,perPageNum=${pageMaker.cri.perPageNum})}">&raquo;</a>
-                                </li>
-
-                            </ul>
-
-                        </div>
-                    </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </section>
-        <!-- /.content -->
+    @media (min-width: 800px) {
+        .et-hero-tabs{
+        }
+        h1 {
+            font-size: 3rem;
+        }
+        h3 {
+            font-size: 1rem;
+        }
+    }
+    .et-hero-tab {
+        font-size: 1rem;
+        font-family: "Century Gothic", 'Lato', sans-serif;
+        font-weight: bold;
+    }
+    ul, li {
+        list-style-type: none; float: left; padding-left: 1rem;
+    }
+</style>
+<script>
+    function selChange() {
+        const sel = document.getElementById('perPageNum').value;
+        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum="+sel;
+    }
+</script>
+<body>
+<section class="et-hero-tabs">
+    <table>
+            <h1>게시판</h1>
+            <th>번호</th>
+        <th>제목</th>
+        <th>아이디</th>
+        <th>작성일</th>
+        <th>조회수</th>
+        <th>최근 수정일</th>
+        <c:forEach var="row" items="${list}">
+            <tr>
+                <td>${row.num}</td>
+                <td><a href="<c:url value="/member/board/read?num=${row.num}&hit=${row.hit}"/>"/>${row.title}</td>
+                <td>${row.memId}</td>
+                <td><fmt:formatDate value="${row.writeDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                <td>${row.hit}</td>
+                <td><fmt:formatDate value="${row.updateWriteDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+            </tr>
+        </c:forEach>
+    </table>
+    <div id="per-Page-Button" style="float: right">
+        <div>
+            <select id="perPageNum" name="perPageNum" onchange="selChange()">
+                <option value="10"
+                        <c:if test="${cri.perPageNum == 10}">selected</c:if>>10줄 보기</option>
+                <option value="15"
+                        <c:if test="${cri.perPageNum == 15}">selected</c:if>>15줄 보기</option>
+                <option value="20"
+                        <c:if test="${cri.perPageNum == 20}">selected</c:if>>20줄 보기</option>
+            </select>
+        </div>
     </div>
-    <!-- /.content-wrapper -->
-
+    <ul class="btn-group pagination">
+        <c:if test="${pageMaker.prev == true }">
+            <li>
+                <a href='<c:url value="/member/board/listPage?page=${pageMaker.startPage-1 }"/>'>이전</a>
+            </li>
+        </c:if>
+        <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
+            <li>
+                <a href='<c:url value="/member/board/listPage?page=${pageNum}&perPageNum=${cri.perPageNum}"/>'>${pageNum}</a>
+            </li>
+        </c:forEach>
+        <c:if test="${pageMaker.next == true && pageMaker.endPage >0}">
+            <li>
+                <a href='<c:url value="/member/board/listPage?page=${pageMaker.endPage+1 }"/>'>다음</a>
+            </li>
+        </c:if>
+    </ul>
+</section>
+<div class="et-hero-tabs-container">
+    <a class="et-hero-tab" href="/">MAIN</a>
+    <a class="et-hero-tab" href="/member/board/writeForm">글쓰기</a>
+    <span class="et-hero-tab-slider"></span>
 </div>
+</body>
 </html>

@@ -84,7 +84,7 @@
         .et-hero-tabs-container {
             display: flex;
             flex-direction: row;
-            position: absolute;
+            position: page;
             bottom: 0;
             width: 100%;
             height: 70px;

@@ -24,9 +24,11 @@ public class Criteria {
     }
 
     public void setPerPageNum(int perPageNum) {
-        if(perPageNum <= 0 || perPageNum > 50)
-        this.perPageNum = perPageNum;
+        if(perPageNum >= 0 || perPageNum < 50) {
+            this.perPageNum = perPageNum;
+        }
     }
+
     public int getPageStart() {
         return (this.page -1) * perPageNum;
     }

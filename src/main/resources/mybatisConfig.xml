@@ -11,7 +11,7 @@
         <typeAlias type="kr.co.nandsoft.member.PageMaker" alias="pageMaker"/>
 
     </typeAliases>
-    <environments default="dataSource">
+    <!--<environments default="dataSource">
         <environment id="dataSource">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
@@ -21,5 +21,5 @@
                 <property name="password" value="${dydehf12##}"/>
             </dataSource>
         </environment>
-    </environments>
+    </environments>-->
 </configuration>

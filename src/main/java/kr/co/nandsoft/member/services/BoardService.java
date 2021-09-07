@@ -18,8 +18,8 @@ public class BoardService implements IBoardService{
     BoardDao dao;
 
     @Override
-    public int countAll(Criteria cri) {
-        return dao.countAll(cri);
+    public int countAll() {
+        return dao.countAll();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BoardService implements IBoardService{
         dao.selectRecord(boardRecord, board);
     }
     @Override
-    public List<Board> selectPage(Criteria cri) {
+    public List<Map<String, Object>> selectPage(Criteria cri) {
         return dao.selectPage(cri);
     }
 }

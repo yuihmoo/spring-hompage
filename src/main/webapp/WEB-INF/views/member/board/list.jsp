@@ -123,7 +123,7 @@
             <th>조회수</th>
             <th>최근 수정일</th>
             <th>수정자</th>
-        <c:forEach var="row" items="${viewAll}">
+        <c:forEach var="row" items="${list}">
             <tr>
                 <td>${row.num}</td>
                 <td>${row.memId}</td>

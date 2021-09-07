@@ -1,37 +1,39 @@
 package kr.co.nandsoft.member.dao;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mchange.v2.c3p0.DataSources;
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
 import kr.co.nandsoft.member.Criteria;
 import kr.co.nandsoft.member.Member;
-import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+//        System.out.println(beforeTime);
 @Repository
 public class BoardDao implements IBoardDao {
 
-    @Resource
-    SqlSessionTemplate sessionTemplate;
+    private final JdbcTemplate template;
 
-    private JdbcTemplate template;
+    private final SqlSessionTemplate sessionTemplate;
 
-    public BoardDao(ComboPooledDataSource dataSource) {
-        this.template = new JdbcTemplate();
+    public BoardDao(DataSource dataSource, SqlSessionTemplate sessionTemplate) {
+        this.template = new JdbcTemplate(dataSource);
+        this.sessionTemplate = sessionTemplate;
     }
 
     @Override
-    public int countAll(Criteria cri) {
+    public int countAll() {
         //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법, v.1.2 status 추가 (활성화, 비활성화)
         //remember authority 란 관리자의 권한 여부를 말한다. (공지사항 = 0, 나머지 = 1) 본인 글은 본인만 권한을 가지고 관리자는 모든 게시글에 권한이 있다.
-        return sessionTemplate.update("board.countAll");
+        return sessionTemplate.selectOne("countAll");
 
 //        String sql = "SELECT num, memId, title, content, status, authority, hit, writeDate, updateWriteDate, updateId, boardNum FROM board where status = true";
 //
@@ -61,7 +63,7 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "INSERT INTO board (memId, title, content, writeDate, updateWriteDate, hit, updateId) values (?,?,?,?,?,?)";
+        String sql = "INSERT INTO board (memId, title, content, writeDate, updateWriteDate, hit, updateId) values (?,?,?,?,?,?,?)";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, board.getMemId());
@@ -84,7 +86,7 @@ public class BoardDao implements IBoardDao {
         return board;
          */
 
-        String query = "select num, memid, title, content, writeDate, updateWriteDate, hit, status, authority, updateId from board where Num = ?";
+        String query = "select num, memId, title, content, writeDate, updateWriteDate, hit, status, authority, updateId from board where Num = ?";
         return template.queryForMap(query, num);
     }
 
@@ -106,7 +108,7 @@ public class BoardDao implements IBoardDao {
         });
         return result;
     }
-//todo 단순히 데이터를 삭제 하는것이 아니라 Delete 삭제에 대한 고민이 필요함. (실제로 DB 삭제는 속도면에서 느리고 삭제된 데이터도 보관해야함.)
+    //todo 단순히 데이터를 삭제 하는것이 아니라 Delete 삭제에 대한 고민이 필요함. (실제로 DB 삭제는 속도면에서 느리고 삭제된 데이터도 보관해야함.)
     @Override
     public void deleteBoard(int Num) {
         //remember 게시물 삭제 테이블로 복사 해놓고 , v1.2 테이블 수정 작업으로 delete_board 테이블 삭제
@@ -130,7 +132,7 @@ public class BoardDao implements IBoardDao {
         });
         return result;
     }
-//todo board 객체말고 boardRecord 객체로 바꿔야함. (정리 필요 )
+    //todo board 객체말고 boardRecord 객체로 바꿔야함. (정리 필요 )
     @Override
     public int insertRecord(Board board) {
 
@@ -180,12 +182,8 @@ public class BoardDao implements IBoardDao {
         }
     }
     @Override
-    public List<Board> selectPage (Criteria cri) {
-        Map<String, Integer> params = null;
-        params.put("page", cri.getPage());
-        params.put("perPageNum", cri.getPerPageNum());
-        return sessionTemplate.selectList("selectPage", params);
+    public List<Map<String, Object>> selectPage(Criteria cri) {
+        return sessionTemplate.selectList("selectPage",cri);
     }
 }
-//        System.out.println(beforeTime);
 //        System.out.println(afterTime);

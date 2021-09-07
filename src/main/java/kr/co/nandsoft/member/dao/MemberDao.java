@@ -1,11 +1,12 @@
 package kr.co.nandsoft.member.dao;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import kr.co.nandsoft.member.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+
+import javax.sql.DataSource;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ public class MemberDao implements IMemberDao {
     private JdbcTemplate template;
 
     @Autowired
-    public MemberDao(ComboPooledDataSource dataSource) {
+    public MemberDao(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
     }
 

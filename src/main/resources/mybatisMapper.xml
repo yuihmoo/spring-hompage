@@ -10,13 +10,13 @@
             num, memId, title, content, status, authority, hit, writeDate, updateWriteDate, updateId, boardNum
         from
             board
-        where num > 0
+        where num > 0 and status = true
         order by num desc, writeDate desc
-            limit #{pageStart}, #{perPageNum}
+        limit #{pageStart}, #{perPageNum}
         ]]>
 </select>
-    <select id="countAll" resultType="kr.co.nandsoft.member.Board">
-        SELECT count(num) FROM board where status = true
+    <select id="countAll" resultType="int">
+        SELECT count(*) FROM board where status = true
     </select>
 
 </mapper>

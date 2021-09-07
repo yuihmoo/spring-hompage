@@ -86,7 +86,7 @@
             .et-hero-tabs-container {
                 display: flex;
                 flex-direction: row;
-                position: absolute;
+                position: page;
                 bottom: 0;
                 width: 100%;
                 height: 70px;
@@ -165,7 +165,7 @@
                 <a class="et-hero-tab" hidden href="/member/board/modifyForm?num=${board.get("num")}">수정</a>
                 <a class="et-hero-tab" hidden href="/member/board/delete?num=${board.get("num")}">삭제</a>
                 <a class="et-hero-tab" href="/">MAIN</a>
-                <a class="et-hero-tab" href="/member/board/list">목록</a>
+                <a class="et-hero-tab" href="/member/board/listPage">목록</a>
                 <span class="et-hero-tab-slider"></span>
             </div>
         </footer>

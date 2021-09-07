@@ -4,12 +4,13 @@ import kr.co.nandsoft.member.*;
 import kr.co.nandsoft.member.services.BoardService;
 import kr.co.nandsoft.member.services.MemberService;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,27 +18,44 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
 import java.sql.Timestamp;
-import org.apache.log4j.Logger;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/member/board")
 public class BoardController {
+    private static final Logger logger = Logger.getLogger(BoardController.class);
 
-    @Autowired
-    MemberService service;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    BoardService boardService;
+    private final MemberService service;
 
-    @Autowired
-    private SqlSessionFactory sqlFactory;
+    private final BoardService boardService;
 
-    private Logger logger = Logger.getLogger(Criteria.class);
+    private final SqlSessionFactory sqlFactory;
 
+    public BoardController(ApplicationContext applicationContext, MemberService service, BoardService boardService, SqlSessionFactory sqlFactory) {
+        this.applicationContext = applicationContext;
+        this.service = service;
+        this.boardService = boardService;
+        this.sqlFactory = sqlFactory;
+    }
+
+    @GetMapping("/getbeans")
+    public void getBeans() {
+        if (this.applicationContext != null) {
+            String[] beans = this.applicationContext.getBeanDefinitionNames();
+            for (String bean : beans) {
+                System.out.println("bean : " + bean);
+            }
+        }
+    }
 
 //remember 로그인 확인하고 리스트 불러오는거 기억하기.
     @RequestMapping(value = "/listPage", method = RequestMethod.GET)
-    public String list(@ModelAttribute("cri")Criteria cri, Model model, HttpSession session, Member member, Board board) {
+    public Object list(Model model, HttpSession session, Member member, HttpServletRequest request,
+                       @RequestParam(value = "page", required = false)String page,
+                       @RequestParam(value = "perPageNum", required = false)String perPageNum) {
 
         member = (Member) session.getAttribute("member");
 //        sqlFactory.openSession();
@@ -45,20 +63,43 @@ public class BoardController {
 
         if (member == null) {
             return "member/loginForm";
+
+        } else if (StringUtils.isEmpty(page) && StringUtils.isEmpty(perPageNum)) {
+            page = "1";
+            perPageNum = "10";
         }
-        else{
-            logger.info(cri.toString());
-
-            model.addAttribute("list", boardService.selectPage(cri));  // 게시판의 글 리스트
-            PageMaker pageMaker = new PageMaker();
-            pageMaker.setCri(cri);
-            pageMaker.setTotalCount(boardService.countAll(cri));
-
-            model.addAttribute("pageMaker", pageMaker);  // 게시판 하단의 페이징 관련, 이전페이지, 페이지 링크 , 다음 페이지
-
-            return "/member/board/listPage";
+        else if (StringUtils.isEmpty(page)) {
+            page = "1";
         }
+        else if (StringUtils.isEmpty(perPageNum)) {
+            perPageNum = "10";
+        }
+
+        logger.error("page : " + page);
+        logger.error("perPageNum : " + perPageNum);
+
+        ModelAndView mav = new ModelAndView("/member/board/listPage");
+        PageMaker pageMaker = new PageMaker();
+        Criteria criteria = new Criteria();
+        criteria.setPage(Integer.parseInt(page));
+        criteria.setPerPageNum(Integer.parseInt(perPageNum));
+        pageMaker.setCri(criteria);
+        pageMaker.setTotalCount(boardService.countAll());
+
+        logger.error("criteria1 : " + criteria.getPage());
+        logger.error("criteria2 : " + criteria.getPerPageNum());
+
+        List<Map<String, Object>> list = boardService.selectPage(criteria);
+
+        mav.addObject("cri", criteria);
+        mav.addObject("list", list);
+        mav.addObject("pageMaker", pageMaker);
+        session.setAttribute("member", member);
+
+        return mav;
     }
+
+
 
     @RequestMapping("/read")
     public ModelAndView read(Board board, HttpSession session, Member member,
@@ -126,7 +167,7 @@ public class BoardController {
         Board brd = boardService.insertBoard(board);
         request.setAttribute("member", brd);
 
-        return "list";
+        return "redirect:listPage";
     }
 
     @RequestMapping(value = "/modifyForm")
@@ -162,13 +203,13 @@ public class BoardController {
         if(board.getTitle() == "" || board.getContent() == "")
             return "member/board/modifyForm";
 
-        return "list";
+        return "redirect:listPage";
     }
 
     @RequestMapping("/delete")
     public String delete(Board board) {
         int num = board.getNum();
         boardService.deleteBoard(num);
-        return "list";
+        return "redirect:listPage";
     }
 }
