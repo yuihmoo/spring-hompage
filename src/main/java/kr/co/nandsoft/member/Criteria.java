@@ -8,11 +8,13 @@ import lombok.Setter;
 public class Criteria {
     private int page;
     private int perPageNum;
+    private String sortOption;
 
     public Criteria() {
         //remember 최초 게시판에 진입할 때를 위해 기본값 설정
         this.page = 1;
         this.perPageNum = 10;
+        this.sortOption = "writeDate";
     }
 
     public void setPage(int page) {
@@ -28,7 +30,6 @@ public class Criteria {
             this.perPageNum = perPageNum;
         }
     }
-
     public int getPageStart() {
         return (this.page -1) * perPageNum;
     }

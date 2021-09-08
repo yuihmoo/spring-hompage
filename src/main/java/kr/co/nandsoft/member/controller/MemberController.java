@@ -4,7 +4,6 @@ import kr.co.nandsoft.member.Member;
 import kr.co.nandsoft.member.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +18,8 @@ import java.util.Locale;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
-//remember Autowired 객체 불러오는거 기억하기.
+    //remember Autowired 객체 불러오는거 기억하기.
+    //study 현재 추세는 생성자를 통한 주입 방식으로 바뀌고 있다.
     @Autowired
     MemberService service;
 

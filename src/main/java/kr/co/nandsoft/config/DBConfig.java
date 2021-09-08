@@ -30,6 +30,18 @@ public class DBConfig extends AbstractDBConfig {
         return dataSource;
     }*/
 
+
+    /*study
+       추상화 클래스인 AbstractDBConfig 를 상속받는 DBConfig 클래스를 생성.
+       Spring Bean 에 등록할 DataSource property 추가. (driver, url, username, password 등) 외에 다른 설정 값도 있다.
+       SqlSessionFactoryBean = SqlSession 을 생성하는 구성 요소이다.
+       SqlSessionTemplate = Mybatis 를 사용하여 직접 데이터 베이스에 엑세스할 객체이다. sqlSession 은 Mapper 파일에서 실행할 쿼리문을 가져와 실행함.
+       SqlSessionFactoryBean 에 DataSource 를 set.
+       SqlSessionFactoryBean 에 ConfigLocation 등록(xml 경로).
+       SqlSessionFactoryBean 에 MapperLocation 등록(xml 경로).
+       SqlSessionTemplate 을 Spring Bean 에 등록.
+     */
+
     @Bean
     @Override
     public DataSource dataSource() {

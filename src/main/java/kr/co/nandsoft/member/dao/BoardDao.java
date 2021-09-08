@@ -31,7 +31,7 @@ public class BoardDao implements IBoardDao {
 
     @Override
     public int countAll() {
-        //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법, v.1.2 status 추가 (활성화, 비활성화)
+        //remember 향상된 For 문으로 SELECT ALL, template.queryForList 사용법, v.1.2 status 추가 (활성화, 비활성화), v1.4 에서 추가된 Mybatis 를 사용해 Dao 수정
         //remember authority 란 관리자의 권한 여부를 말한다. (공지사항 = 0, 나머지 = 1) 본인 글은 본인만 권한을 가지고 관리자는 모든 게시글에 권한이 있다.
         return sessionTemplate.selectOne("countAll");
 
@@ -59,7 +59,7 @@ public class BoardDao implements IBoardDao {
 
     @Override
     public int insertBoard(Board board) {
-        //remember 글을 쓸 때 조회를 1번 한것으로 가정한다. hit = 1, 최근 업데이트 update_Time_stamp 추가.
+        //remember 글을 쓸 때 조회를 1번 한 것으로 가정한다. hit = 1, 최근 업데이트 update_Time_stamp 추가.
 
         int result = 0;
 

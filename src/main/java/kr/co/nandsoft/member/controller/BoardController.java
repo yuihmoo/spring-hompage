@@ -21,9 +21,11 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
+//study BoardController 라는 객체에 멤버변수로 logger, ApplicationContext, MemberService, BoardService, SqlSessionFactory(Mybatis) 를 주고, 생성자 하나를 만들어 준다.
 @Controller
 @RequestMapping("/member/board")
 public class BoardController {
+
     private static final Logger logger = Logger.getLogger(BoardController.class);
 
     private final ApplicationContext applicationContext;
@@ -40,6 +42,7 @@ public class BoardController {
         this.boardService = boardService;
         this.sqlFactory = sqlFactory;
     }
+// study getMapping 어노테이션을 통해 내가 등록한 빈을 콘솔 창에 얻을 수 있다.
 
     @GetMapping("/getbeans")
     public void getBeans() {
@@ -55,43 +58,52 @@ public class BoardController {
     @RequestMapping(value = "/listPage", method = RequestMethod.GET)
     public Object list(Model model, HttpSession session, Member member, HttpServletRequest request,
                        @RequestParam(value = "page", required = false)String page,
-                       @RequestParam(value = "perPageNum", required = false)String perPageNum) {
+                       @RequestParam(value = "perPageNum", required = false)String perPageNum,
+                       @RequestParam(value = "sortOption", required = false)String sortOption) {
 
         member = (Member) session.getAttribute("member");
 //        sqlFactory.openSession();
 //        System.out.println("ok");
-
+        //remember Paging 관련 page, perPageNum 의 null 을 방지하기 위함.
         if (member == null) {
             return "member/loginForm";
 
         } else if (StringUtils.isEmpty(page) && StringUtils.isEmpty(perPageNum)) {
             page = "1";
             perPageNum = "10";
+            sortOption = "writeDate";
         }
         else if (StringUtils.isEmpty(page)) {
             page = "1";
+            sortOption = "writeDate";
         }
         else if (StringUtils.isEmpty(perPageNum)) {
             perPageNum = "10";
+            sortOption = "writeDate";
         }
-
+        //study logger 를 이용해서 확인하는 습관을 기르자.
         logger.error("page : " + page);
         logger.error("perPageNum : " + perPageNum);
+        logger.info("sortOption : " + sortOption);
 
         ModelAndView mav = new ModelAndView("/member/board/listPage");
+        //remember Paging 관련 countAll(게시글 총 갯수), selectPage(현재 선택된 페이지 설정대로 DB 에서 Select)
         PageMaker pageMaker = new PageMaker();
-        Criteria criteria = new Criteria();
-        criteria.setPage(Integer.parseInt(page));
-        criteria.setPerPageNum(Integer.parseInt(perPageNum));
-        pageMaker.setCri(criteria);
+        Criteria cri = new Criteria();
+        cri.setPage(Integer.parseInt(page));
+        cri.setPerPageNum(Integer.parseInt(perPageNum));
+        cri.setSortOption(sortOption);
+        pageMaker.setCri(cri);
         pageMaker.setTotalCount(boardService.countAll());
 
-        logger.error("criteria1 : " + criteria.getPage());
-        logger.error("criteria2 : " + criteria.getPerPageNum());
+        logger.error("criteria1 : " + cri.getPage());
+        logger.error("criteria2 : " + cri.getPerPageNum());
+        logger.info("criteria3 : " + cri.getSortOption());
 
-        List<Map<String, Object>> list = boardService.selectPage(criteria);
+        List<Map<String, Object>> list = boardService.selectPage(cri);
 
-        mav.addObject("cri", criteria);
+
+        mav.addObject("cri", cri);
         mav.addObject("list", list);
         mav.addObject("pageMaker", pageMaker);
         session.setAttribute("member", member);

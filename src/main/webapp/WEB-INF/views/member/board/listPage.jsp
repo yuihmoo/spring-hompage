@@ -113,18 +113,29 @@
     ul, li {
         list-style-type: none; float: left; padding-left: 1rem;
     }
+    a:link { text-decoration:none; color:#2a9a9f;}
+
+    a:visited { text-decoration:none;color:#000000;}
+
+    a:active {text-decoration:none; color:#e83611; }
+
+    a:hover { text-decoration:none; color:#EDA900;}
 </style>
 <script>
     function selChange() {
         const sel = document.getElementById('perPageNum').value;
-        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum="+sel;
+        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum="+sel+"&sortOption=${cri.sortOption}";
+    }
+    function sortChange() {
+        const sel = document.getElementById('sortOption').value;
+        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&sortOption="+sel;
     }
 </script>
 <body>
 <section class="et-hero-tabs">
     <table>
-            <h1>게시판</h1>
-            <th>번호</th>
+        <h1>게시판</h1>
+        <th>번호</th>
         <th>제목</th>
         <th>아이디</th>
         <th>작성일</th>
@@ -141,34 +152,59 @@
             </tr>
         </c:forEach>
     </table>
+    <input type="text" id="searchOption" name="searchOption" width="3rem" onsubmit="">
     <div id="per-Page-Button" style="float: right">
         <div>
             <select id="perPageNum" name="perPageNum" onchange="selChange()">
                 <option value="10"
-                        <c:if test="${cri.perPageNum == 10}">selected</c:if>>10줄 보기</option>
+                        <c:if test="${cri.perPageNum == 10}">selected</c:if>>10줄 보기
+                </option>
                 <option value="15"
-                        <c:if test="${cri.perPageNum == 15}">selected</c:if>>15줄 보기</option>
+                        <c:if test="${cri.perPageNum == 15}">selected</c:if>>15줄 보기
+                </option>
                 <option value="20"
-                        <c:if test="${cri.perPageNum == 20}">selected</c:if>>20줄 보기</option>
+                        <c:if test="${cri.perPageNum == 20}">selected</c:if>>20줄 보기
+                </option>
             </select>
         </div>
     </div>
-    <ul class="btn-group pagination">
+    <div id="sort-Option-Button" style="float: right">
+        <div>
+            <select id="sortOption" name="sortOption" onchange="sortChange()">
+                <option value="num"
+                        <c:if test="${cri.sortOption == 'num'}">selected</c:if>>번호 순
+                </option>
+                <option value="updateWriteDate"
+                        <c:if test="${cri.sortOption == 'updateWriteDate'}">selected</c:if>>최근 수정일 순
+                </option>
+                <option value="hit"
+                        <c:if test="${cri.sortOption == 'hit'}">selected</c:if>>조회 순
+                </option>
+            </select>
+        </div>
+    </div>
+    <ul class="btn-group-pagination">
+        <li>
+            <a href='<c:url value="/member/board/listPage?page=${1}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>처음</a>
+        </li>
         <c:if test="${pageMaker.prev == true }">
             <li>
-                <a href='<c:url value="/member/board/listPage?page=${pageMaker.startPage-1 }"/>'>이전</a>
+                <a href='<c:url value="/member/board/listPage?page=${pageMaker.startPage-1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>이전</a>
             </li>
         </c:if>
         <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
             <li>
-                <a href='<c:url value="/member/board/listPage?page=${pageNum}&perPageNum=${cri.perPageNum}"/>'>${pageNum}</a>
+                <a href='<c:url value="/member/board/listPage?page=${pageNum}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>[${pageNum}]</a>
             </li>
         </c:forEach>
         <c:if test="${pageMaker.next == true && pageMaker.endPage >0}">
             <li>
-                <a href='<c:url value="/member/board/listPage?page=${pageMaker.endPage+1 }"/>'>다음</a>
+                <a href='<c:url value="/member/board/listPage?page=${pageMaker.endPage+1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>다음</a>
             </li>
         </c:if>
+        <li>
+            <a href='<c:url value="/member/board/listPage?page=${pageMaker.tempEndPage}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>끝</a>
+        </li>
     </ul>
 </section>
 <div class="et-hero-tabs-container">
