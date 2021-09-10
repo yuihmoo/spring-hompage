@@ -1,7 +1,5 @@
 package kr.co.nandsoft.member.dao;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.mchange.v2.c3p0.DataSources;
 import kr.co.nandsoft.member.Board;
 import kr.co.nandsoft.member.BoardRecord;
 import kr.co.nandsoft.member.Criteria;
@@ -10,7 +8,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;

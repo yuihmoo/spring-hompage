@@ -106,6 +106,7 @@ public class BoardController {
         mav.addObject("cri", cri);
         mav.addObject("list", list);
         mav.addObject("pageMaker", pageMaker);
+        mav.addObject("member", service.memberSearch(member));
         session.setAttribute("member", member);
 
         return mav;
@@ -127,6 +128,7 @@ public class BoardController {
         else
         {
             //remember read 서비스에 필요한 객체 멤버변수 set
+            //study 시간 값 WAS에서 뽑지말고 DB로 통일 시키기 (1개의 기준이 필요)
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             board.setWriteDate(timestamp);
             board.setMemId(member.getMemId());
@@ -166,8 +168,9 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/write", method = RequestMethod.POST)
-    public String write(@ModelAttribute("board") Board board, HttpServletRequest request) {
+    public String write(@ModelAttribute("board") Board board, HttpServletRequest request, Member member, HttpSession session) {
         //remember 글을 쓸때 Write_date 값도 set
+        member = (Member) session.getAttribute("member");
 
         if(board.getTitle().trim().length() == 0 || board.getContent().trim().length() == 0)
         {
@@ -175,6 +178,8 @@ public class BoardController {
         }
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        //remember 클라이언트를 믿지말자. 화면에서 memId를 받으면 안된다.
+        board.setMemId(member.getMemId());
         board.setWriteDate(timestamp);
         Board brd = boardService.insertBoard(board);
         request.setAttribute("member", brd);
