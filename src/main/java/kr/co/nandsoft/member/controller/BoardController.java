@@ -59,7 +59,8 @@ public class BoardController {
     public Object list(Model model, HttpSession session, Member member, HttpServletRequest request,
                        @RequestParam(value = "page", required = false)String page,
                        @RequestParam(value = "perPageNum", required = false)String perPageNum,
-                       @RequestParam(value = "sortOption", required = false)String sortOption) {
+                       @RequestParam(value = "sortOption", required = false)String sortOption,
+                       @RequestParam(value = "searchOption")String searchOption) {
 
         member = (Member) session.getAttribute("member");
 //        sqlFactory.openSession();
@@ -81,10 +82,14 @@ public class BoardController {
             perPageNum = "10";
             sortOption = "writeDate";
         }
+        else if (StringUtils.isEmpty(searchOption)) {
+            searchOption = "%";
+        }
         //study logger 를 이용해서 확인하는 습관을 기르자.
         logger.error("page : " + page);
         logger.error("perPageNum : " + perPageNum);
         logger.info("sortOption : " + sortOption);
+        logger.info("searchOption : " + searchOption);
 
         ModelAndView mav = new ModelAndView("/member/board/listPage");
         //remember Paging 관련 countAll(게시글 총 갯수), selectPage(현재 선택된 페이지 설정대로 DB 에서 Select)
@@ -93,6 +98,8 @@ public class BoardController {
         cri.setPage(Integer.parseInt(page));
         cri.setPerPageNum(Integer.parseInt(perPageNum));
         cri.setSortOption(sortOption);
+        cri.setSearchOption("%"+searchOption+"%");
+
         pageMaker.setCri(cri);
         pageMaker.setTotalCount(boardService.countAll());
 

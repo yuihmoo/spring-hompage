@@ -10,13 +10,10 @@
             num, memId, title, content, status, authority, hit, writeDate, updateWriteDate, updateId, boardNum
         from
             board
-        where num > 0 and status = true
+        where num > 0 and status = true and content like ${searchOption}
         order by ${sortOption} desc
         limit #{pageStart}, #{perPageNum}
         ]]>
-        <if test="#{pageStart eq 1}">
-
-        </if>
 </select>
     <!-- CDATA 가 없어도 쿼리문이 작동 됨. CDATA 태그 특성상 xml 에게 파싱을 하냐 안하냐를 결정해주기 때문. 결정적으로 부등호가 없는 경우 쓸 수 있다. -->
     <select id="countAll" resultType="int">

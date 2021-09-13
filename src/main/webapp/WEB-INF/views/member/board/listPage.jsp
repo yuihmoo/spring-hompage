@@ -4,7 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <head>
     <title>게시판 목록</title>
-    <link rel="stylesheet" type="text/css" href="/css/listPage.css?version=1.2.9">
+    <link rel="stylesheet" type="text/css" href="/css/listPage.css?version=1.3.3">
 </head>
 <script>
     function selChange() {
@@ -14,6 +14,10 @@
     function sortChange() {
         const sel = document.getElementById('sortOption').value;
         location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&sortOption="+sel;
+    }
+    function searchText() {
+        const searchText = document.getElementById('searchText').value;
+        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&searchText="+searchText;
     }
 </script>
 <body>
@@ -26,7 +30,7 @@
                 <div id="board-properties">
                     <div class="table-wrapper">
                         <div id="per-Page-Button" style="float: right">
-                            <div>
+                            <div class="perPageNum">
                                 <select id="perPageNum" name="perPageNum" onchange="selChange()">
                                     <option value="10"
                                             <c:if test="${cri.perPageNum == 10}">selected</c:if>>10줄 보기
@@ -40,9 +44,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="sort-Option-Button" style="float: right">
+                        <div class="sort-Option-Button" style="float: right">
                             <div>
-                                <select id="sortOption" name="sortOption" onchange="sortChange()">
+                                <select name="sortOption" onchange="sortChange()">
                                     <option value="num"
                                             <c:if test="${cri.sortOption == 'num'}">selected</c:if>>번호 순
                                     </option>
@@ -53,6 +57,11 @@
                                             <c:if test="${cri.sortOption == 'hit'}">selected</c:if>>조회 순
                                     </option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="searching-Option">
+                            <div>
+                                검색 : <input type="text" id="searchText"><input type="button" name="search" onclick="searchText()" value="Search">
                             </div>
                         </div>
                         <table class="table" id="table">

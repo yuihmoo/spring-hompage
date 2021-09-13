@@ -9,6 +9,7 @@ public class Criteria {
     private int page;
     private int perPageNum;
     private String sortOption;
+    private String searchOption;
 
     public Criteria() {
         //remember 최초 게시판에 진입할 때를 위해 기본값 설정
