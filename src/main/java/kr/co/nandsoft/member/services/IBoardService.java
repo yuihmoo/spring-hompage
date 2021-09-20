@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface IBoardService {
 
-    int countAll();
+    int countAll(Criteria cri);
     Board insertBoard(Board board);
     Object readBoard(Board board);
     void modifyBoard(Board board, Member member);

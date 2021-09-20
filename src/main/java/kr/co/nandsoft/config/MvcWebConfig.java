@@ -33,5 +33,8 @@ public class MvcWebConfig implements WebMvcConfigurer {
         // Register resource handler for images
         registry.addResourceHandler("/images/**").addResourceLocations("/images/")
                 .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS));
+        // Register resource handler for js
+/*        registry.addResourceHandler("/js/**").addResourceLocations("/js/")
+                .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS));*/
     }
 }

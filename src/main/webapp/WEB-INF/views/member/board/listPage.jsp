@@ -1,25 +1,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <title>게시판 목록</title>
     <link rel="stylesheet" type="text/css" href="/css/listPage.css?version=1.3.3">
+    <script>
+        function selChange() {
+            const sel = document.getElementById('perPageNum').value;
+            location.href = "/member/board/listPage?page=${pageMaker.startPage}&perPageNum=" + sel + "&sortOption=${cri.sortOption}&searchText=${cri.searchOption}";
+        }
+
+        function sortChange() {
+            const sort = document.getElementById('sortOption').value;
+            location.href = "/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&sortOption=" + sort + "&searchText=${cri.searchOption}";
+        }
+
+        function searchText() {
+            const searchText = document.getElementById('searchText').value;
+            location.href = "/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=" + searchText;
+        }
+        function checkKeyDown(e) {
+            if (e.keyCode === 13) {
+                searchText();
+            }
+        }
+    </script>
 </head>
-<script>
-    function selChange() {
-        const sel = document.getElementById('perPageNum').value;
-        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum="+sel+"&sortOption=${cri.sortOption}";
-    }
-    function sortChange() {
-        const sel = document.getElementById('sortOption').value;
-        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&sortOption="+sel;
-    }
-    function searchText() {
-        const searchText = document.getElementById('searchText').value;
-        location.href="/member/board/listPage?page=${pageMaker.startPage}&perPageNum=${cri.perPageNum}&searchText="+searchText;
-    }
-</script>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 <h1 id="page-title">게시판 목록</h1>
@@ -46,7 +53,7 @@
                         </div>
                         <div class="sort-Option-Button" style="float: right">
                             <div>
-                                <select name="sortOption" onchange="sortChange()">
+                                <select id="sortOption" name="sortOption" onchange="sortChange()">
                                     <option value="num"
                                             <c:if test="${cri.sortOption == 'num'}">selected</c:if>>번호 순
                                     </option>
@@ -61,7 +68,7 @@
                         </div>
                         <div class="searching-Option">
                             <div>
-                                검색 : <input type="text" id="searchText"><input type="button" name="search" onclick="searchText()" value="Search">
+                                검색 : <input type="text" id="searchText" onkeydown="checkKeyDown(e)"><input type="button" name="search" onclick="searchText()" value="Search">
                             </div>
                         </div>
                         <table class="table" id="table">
@@ -79,40 +86,43 @@
                             <c:forEach var="row" items="${list}">
                                 <tr>
                                     <td>${row.num}</td>
-                                    <td><a href="<c:url value="/member/board/read?num=${row.num}&hit=${row.hit}"/>"/>${row.title}</td>
+                                    <td>
+                                        <a href="<c:url value="/member/board/read?num=${row.num}&hit=${row.hit}"/>"/>${row.title}
+                                    </td>
                                     <td>${row.memId}</td>
-                                    <td><fmt:formatDate value="${row.writeDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                                    <td><fmt:formatDate value="${row.writeDate}"
+                                                        pattern="yyyy-MM-dd"></fmt:formatDate></td>
                                     <td>${row.hit}</td>
-                                    <td><fmt:formatDate value="${row.updateWriteDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                                    <td><fmt:formatDate value="${row.updateWriteDate}"
+                                                        pattern="yyyy-MM-dd"></fmt:formatDate></td>
                                 </tr>
                             </c:forEach>
                             </tbody>
                         </table>
                         <div class="btn-group-pagination">
-<%--                        <input type="text" id="searchOption" name="searchOption" width="3rem" onsubmit="">--%>
-                        <ul class="pagination">
-                            <li>
-                                <a href='<c:url value="/member/board/listPage?page=${1}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>처음</a>
-                            </li>
-                            <c:if test="${pageMaker.prev == true }">
+                            <ul class="pagination">
                                 <li>
-                                    <a href='<c:url value="/member/board/listPage?page=${pageMaker.startPage-1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>이전</a>
+                                    <a href='<c:url value="/member/board/listPage?page=${1}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=${cri.searchOption}"/>'>처음</a>
                                 </li>
-                            </c:if>
-                            <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
+                                <c:if test="${pageMaker.prev == true }">
+                                    <li>
+                                        <a href='<c:url value="/member/board/listPage?page=${pageMaker.startPage-1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=${cri.searchOption}"/>'>이전</a>
+                                    </li>
+                                </c:if>
+                                <c:forEach begin="${pageMaker.startPage }" end="${pageMaker.endPage }" var="pageNum">
+                                    <li>
+                                        <a href='<c:url value="/member/board/listPage?page=${pageNum}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=${cri.searchOption}"/>'>[${pageNum}]</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${pageMaker.next == true && pageMaker.endPage >0}">
+                                    <li>
+                                        <a href='<c:url value="/member/board/listPage?page=${pageMaker.endPage+1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=${cri.searchOption}"/>'>다음</a>
+                                    </li>
+                                </c:if>
                                 <li>
-                                    <a href='<c:url value="/member/board/listPage?page=${pageNum}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>[${pageNum}]</a>
+                                    <a href='<c:url value="/member/board/listPage?page=${pageMaker.tempEndPage}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}&searchText=${cri.searchOption}"/>'>끝</a>
                                 </li>
-                            </c:forEach>
-                            <c:if test="${pageMaker.next == true && pageMaker.endPage >0}">
-                                <li>
-                                    <a href='<c:url value="/member/board/listPage?page=${pageMaker.endPage+1 }&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>다음</a>
-                                </li>
-                            </c:if>
-                            <li>
-                                <a href='<c:url value="/member/board/listPage?page=${pageMaker.tempEndPage}&perPageNum=${cri.perPageNum}&sortOption=${cri.sortOption}"/>'>끝</a>
-                            </li>
-                        </ul>
+                            </ul>
                         </div>
                         <!-- /#no-results -->
                     </div>

@@ -60,19 +60,21 @@ public class BoardController {
                        @RequestParam(value = "page", required = false)String page,
                        @RequestParam(value = "perPageNum", required = false)String perPageNum,
                        @RequestParam(value = "sortOption", required = false)String sortOption,
-                       @RequestParam(value = "searchOption")String searchOption) {
+                       @RequestParam(value = "searchText", required = false)String searchOption) {
 
         member = (Member) session.getAttribute("member");
 //        sqlFactory.openSession();
 //        System.out.println("ok");
         //remember Paging 관련 page, perPageNum 의 null 을 방지하기 위함.
+        logger.info("searchOption : " + searchOption);
         if (member == null) {
             return "member/loginForm";
 
-        } else if (StringUtils.isEmpty(page) && StringUtils.isEmpty(perPageNum)) {
+        } else if (StringUtils.isEmpty(page) && StringUtils.isEmpty(perPageNum) && StringUtils.isEmpty(searchOption)) {
             page = "1";
             perPageNum = "10";
             sortOption = "writeDate";
+            searchOption = "%";
         }
         else if (StringUtils.isEmpty(page)) {
             page = "1";
@@ -82,12 +84,15 @@ public class BoardController {
             perPageNum = "10";
             sortOption = "writeDate";
         }
+        else if (StringUtils.isEmpty(sortOption)) {
+            sortOption = "writeDate";
+        }
         else if (StringUtils.isEmpty(searchOption)) {
             searchOption = "%";
         }
         //study logger 를 이용해서 확인하는 습관을 기르자.
-        logger.error("page : " + page);
-        logger.error("perPageNum : " + perPageNum);
+        logger.info("page : " + page);
+        logger.info("perPageNum : " + perPageNum);
         logger.info("sortOption : " + sortOption);
         logger.info("searchOption : " + searchOption);
 
@@ -98,14 +103,15 @@ public class BoardController {
         cri.setPage(Integer.parseInt(page));
         cri.setPerPageNum(Integer.parseInt(perPageNum));
         cri.setSortOption(sortOption);
-        cri.setSearchOption("%"+searchOption+"%");
+        cri.setSearchOption(searchOption);
 
         pageMaker.setCri(cri);
-        pageMaker.setTotalCount(boardService.countAll());
+        pageMaker.setTotalCount(boardService.countAll(cri));
 
         logger.error("criteria1 : " + cri.getPage());
         logger.error("criteria2 : " + cri.getPerPageNum());
         logger.info("criteria3 : " + cri.getSortOption());
+        logger.info("searchOption : " + cri.getSearchOption());
 
         List<Map<String, Object>> list = boardService.selectPage(cri);
 
@@ -152,6 +158,7 @@ public class BoardController {
 
             mav.setViewName("member/board/read");
             session.setAttribute("member", member);
+            mav.addObject("member", member);
         }
         return mav;
     }

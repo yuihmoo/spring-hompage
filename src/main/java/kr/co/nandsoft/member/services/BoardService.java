@@ -18,8 +18,8 @@ public class BoardService implements IBoardService{
     BoardDao dao;
 
     @Override
-    public int countAll() {
-        return dao.countAll();
+    public int countAll(Criteria cri) {
+        return dao.countAll(cri);
     }
 
     @Override

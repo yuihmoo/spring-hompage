@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IBoardDao {
-    int countAll();
+    int countAll(Criteria cri);
     int insertBoard(Board board);
     Map<String, Object> readBoard(int num);
     int modifyBoard(Board board, Member member);
