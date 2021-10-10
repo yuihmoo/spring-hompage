@@ -11,34 +11,13 @@
 <html>
 <head>
     <title>${board.get("title")}</title>
-    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.0.3">
+    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.2.1">
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 <h1 id="page-title">제목 : ${board.get("title")}</h1>
-<div class="section">
-    <div class="slider">
-        <div class="container slidercontent">
-                <div class="board-content">
-                    <div class="content">
-                        ${board.get("content")}
-                    </div>
-                </div>
-                <div class="sort-Option-Button">
-                    <div>
-                    </div>
-                </div>
-                <div class="searching-Option">
-                </div>
-                <div class="btn-group-pagination">
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="board-content">
+    <p class="board-content-letter">${board.get("content")}</p>
 </div>
-</div>
-</div>
-</body>
-    </html>
 </body>
 </html>

@@ -9,9 +9,8 @@
 <title>회원정보 수정</title>
 </head>
 <body>
-
+<jsp:include page="header.jsp"></jsp:include>
 	<h1>회원정보 수정</h1>
-	
 	<form:form action="/member/modify" method="post" modelAttribute="member">
 		<form:hidden path="memId" value="${member.memId}"/>
 		<table>
