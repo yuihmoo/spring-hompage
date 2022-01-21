@@ -4,7 +4,6 @@ import kr.co.nandsoft.member.*;
 import kr.co.nandsoft.member.services.BoardService;
 import kr.co.nandsoft.member.services.MemberService;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +23,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/member/board")
 public class BoardController {
-
-    private static final Logger logger = Logger.getLogger(BoardController.class);
 
     private final ApplicationContext applicationContext;
 
@@ -62,7 +59,6 @@ public class BoardController {
 //        sqlFactory.openSession();
 //        System.out.println("ok");
         //remember Paging 관련 page, perPageNum 의 null 을 방지하기 위함.
-        logger.info("searchOption : " + searchOption);
         if (member == null) {
             return "member/loginForm";
 
@@ -87,10 +83,6 @@ public class BoardController {
             searchOption = "%";
         }
         //study logger 를 이용해서 확인하는 습관을 기르자.
-        logger.info("page : " + page);
-        logger.info("perPageNum : " + perPageNum);
-        logger.info("sortOption : " + sortOption);
-        logger.info("searchOption : " + searchOption);
 
         ModelAndView mav = new ModelAndView("/member/board/listPage");
         //remember Paging 관련 countAll(게시글 총 갯수), selectPage(현재 선택된 페이지 설정대로 DB 에서 Select)
@@ -103,11 +95,6 @@ public class BoardController {
 
         pageMaker.setCri(cri);
         pageMaker.setTotalCount(boardService.countAll(cri));
-
-        logger.error("criteria1 : " + cri.getPage());
-        logger.error("criteria2 : " + cri.getPerPageNum());
-        logger.info("criteria3 : " + cri.getSortOption());
-        logger.info("searchOption : " + cri.getSearchOption());
 
         List<Map<String, Object>> list = boardService.selectPage(cri);
 
