@@ -24,20 +24,19 @@ public class AES256Util {
      * @throws UnsupportedEncodingException
      *             키값의 길이가 16이하일 경우 발생
      */
-    final static String key = "비밀키입력하는곳";
+    final static String key = "jejuShinhwaworldENCkey";
 
     public AES256Util() throws UnsupportedEncodingException {
-        this.iv = key.substring(0, 16);
-        byte[] keyBytes = new byte[16];
+        this.iv = key.substring(0, 22);
+        byte[] keyBytes = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
         byte[] b = key.getBytes("UTF-8");
         int len = b.length;
         if (len > keyBytes.length) {
             len = keyBytes.length;
         }
         System.arraycopy(b, 0, keyBytes, 0, len);
-        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
 
-        this.keySpec = keySpec;
+        this.keySpec = new SecretKeySpec(keyBytes, "AES");
     }
 
     /**
@@ -75,5 +74,13 @@ public class AES256Util {
         c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
         byte[] byteStr = Base64.decodeBase64(str.getBytes());
         return new String(c.doFinal(byteStr), "UTF-8");
+    }
+
+    public static void main(String[] args) throws UnsupportedEncodingException, GeneralSecurityException
+    {
+        AES256Util aes256Util = new AES256Util();
+        String enPwd = "gvGWPkxGPvEP+6XjcnC4rQ==";
+        String dePwd = aes256Util.decrypt(enPwd);
+        System.out.println(dePwd);
     }
 }

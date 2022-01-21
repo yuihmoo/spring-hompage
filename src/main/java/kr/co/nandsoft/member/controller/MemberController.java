@@ -104,7 +104,8 @@ public class MemberController {
         Member mem = service.memberModify(member);
         if(mem == null) {
             mav.setViewName("member/modifyForm");
-        } else {
+        }
+        else {
             session.setAttribute("member", mem);
             mav.addObject("memAft", mem);
             mav.setViewName("member/modifyOk");

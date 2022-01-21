@@ -9,4 +9,5 @@ public interface IMemberDao {
     int memberUpdate(Member member);
     int memberDelete(Member member);
     int memberCheckId(Member member);
+
 }

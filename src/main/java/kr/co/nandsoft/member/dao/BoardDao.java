@@ -60,7 +60,7 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "INSERT INTO board (memId, title, content, writeDate, updateWriteDate, hit, updateId) values (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO board (memId, title, content, writeDate, updateWriteDate, hit, updateId) VALUES (?,?,?,?,?,?,?)";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, board.getMemId());
@@ -83,16 +83,16 @@ public class BoardDao implements IBoardDao {
         return board;
          */
 
-        String query = "select num, memId, title, content, writeDate, updateWriteDate, hit, status, authority, updateId from board where Num = ?";
+        String query = "SELECT num, memId, title, content, writeDate, updateWriteDate, hit, status, authority, updateId FROM board WHERE Num = ?";
         return template.queryForMap(query, num);
     }
 
     @Override
-    public int modifyBoard(Board board, Member member) {
+    public void modifyBoard(Board board, Member member) {
         int result = 0;
         //remember 같은 값일 때를 대비해 한번 초기화
         this.template.update(
-                "update board set updateId = 1 WHERE num = ?", board.getNum());
+                "UPDATE board SET updateId = 1 WHERE num = ?", board.getNum());
 
         final String sql = "UPDATE board SET title = ?, content = ?, updateWriteDate = ?, updateId = ? WHERE Num = ?";
 
@@ -103,7 +103,6 @@ public class BoardDao implements IBoardDao {
             pstmt.setString(4, member.getMemId());
             pstmt.setInt(5, (board.getNum()));
         });
-        return result;
     }
     //todo 단순히 데이터를 삭제 하는것이 아니라 Delete 삭제에 대한 고민이 필요함. (실제로 DB 삭제는 속도면에서 느리고 삭제된 데이터도 보관해야함.)
     @Override
@@ -113,11 +112,11 @@ public class BoardDao implements IBoardDao {
 //                "insert into delete_board select * from board where Num = ?", Num);
         //remember 실제 게시물 테이블에 삭제, v1.2 status = false 값으로 비활성화 상태 설정
         this.template.update(
-                "UPDATE board set status = false where Num = ?", Num);
+                "UPDATE board SET status = false WHERE Num = ?", Num);
     }
 
     @Override
-    public int hitBoard(Board board) {
+    public void hitBoard(Board board) {
         //remember 페이지 번호 = Num 으로 찾고 hit +1 해주기. v1.1(쿼리문 안에 hit+1로 바꾼이유는 동시에 접속하는 상황을 가정했을 때 생길 수 있는 트랜잭션 문제 때문.)
 
         int result = 0;
@@ -127,11 +126,10 @@ public class BoardDao implements IBoardDao {
         result = template.update(sql, pstmt -> {
             pstmt.setInt(1, board.getNum());
         });
-        return result;
     }
     //todo board 객체말고 boardRecord 객체로 바꿔야함. (정리 필요 )
     @Override
-    public int insertRecord(Board board) {
+    public void insertRecord(Board board) {
 
         int result = 0;
 
@@ -142,11 +140,10 @@ public class BoardDao implements IBoardDao {
             pstmt.setInt(2, board.getNum());
             pstmt.setString(3, board.getMemId());
         });
-        return result;
     }
 
     @Override
-    public int selectRecord(BoardRecord boardRecord, Board board) {
+    public void selectRecord(BoardRecord boardRecord, Board board) {
         //study 이 메소드를 추가 할 때 변수명이 꼬였다. 변수명 짓기에 더 주의하자.
         //study String sql 작성 시 select * 은 가급적 삼가하자.
 
@@ -154,7 +151,7 @@ public class BoardDao implements IBoardDao {
 
         int result = 0;
 
-        String sql = "select readTime from board_record WHERE readTime = ? and pageNum = ? and memId = ?";
+        String sql = "SELECT readTime FROM board_record WHERE readTime = ? AND pageNum = ? AND memId = ?";
 
         List<Map<String, Object>> read_times = template.queryForList(sql, boardRecord.getReadTime(), boardRecord.getPageNum(), boardRecord.getMemId());
         System.out.println(read_times);
@@ -164,7 +161,7 @@ public class BoardDao implements IBoardDao {
 
         //remember timesSize = 1 일 때, afterTime 값이 -1이 되어 Exception 발생.
         if (timesSize == 1 || timesSize == 0) {
-            return hitBoard(board);
+            hitBoard(board);
         } else {
             //remember Map 의 key 값은 "String"!
             Date afterTime = (Date) read_times.get(timesSize -1).get("readTime");
@@ -172,9 +169,8 @@ public class BoardDao implements IBoardDao {
 
             //remember String 을 비교할땐 "equals"!
             if (beforeTime.equals(afterTime)) {
-                return result;
             } else {
-                return hitBoard(board);
+                hitBoard(board);
             }
         }
     }

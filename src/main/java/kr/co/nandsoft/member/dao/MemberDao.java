@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class MemberDao implements IMemberDao {
 
-    private JdbcTemplate template;
+    private final JdbcTemplate template;
 
     @Autowired
     public MemberDao(DataSource dataSource) {
@@ -25,7 +25,7 @@ public class MemberDao implements IMemberDao {
 
         int result = 0;
         //remember sha1 암호화 로직으로 저장. 원래는 WAS 단에서 암호화와 복호화가 이루어져야한다. 스프링 시큐리티 공부하기.
-        String sql = "INSERT INTO member (memId, memPw, memMail) values (?,sha1(?),?)";
+        String sql = "INSERT INTO member (memId, memPw, memMail) VALUES (?,sha1(?),?)";
 
         result = template.update(sql, pstmt -> {
             pstmt.setString(1, member.getMemId());
@@ -60,7 +60,7 @@ public class MemberDao implements IMemberDao {
     @Override
     public int memberCheckId(Member member) {
         return this.template.update(
-                "select memId from member where memId = ?", member.getMemId());
+                "SELECT memId FROM member WHERE memId = ?", member.getMemId());
     }
 
     @Override
@@ -83,9 +83,9 @@ public class MemberDao implements IMemberDao {
     public int memberDelete(final Member member) {
         //remember 삭제하기 전 복사
         this.template.update(
-                "insert into delete_member select * from member where memId = ?", member.getMemId());
+                "INSERT INTO delete_member SELECT * FROM member WHERE memId = ?", member.getMemId());
         //remember 삭제하기
         return this.template.update(
-                "delete from member where memId = ?", member.getMemId());
+                "DELETE FROM member WHERE memId = ?", member.getMemId());
     }
 }

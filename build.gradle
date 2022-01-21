@@ -17,13 +17,12 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    testCompile('org.projectlombok:lombok:1.18.10')
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompile('org.projectlombok:lombok:1.18.22')
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.22"
 
     // https://mvnrepository.com/artifact/log4j/log4j
-    compile group: 'log4j', name: 'log4j', version: '1.2.17'
 
     // spring
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.3.RELEASE'
@@ -46,13 +45,11 @@ dependencies {
     compile group: 'com.oracle', name: 'ojdbc7', version: '12.1.0.2'
 
     // log4j
-    compile group: 'log4j' , name: 'log4j', version: '1.2.17'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
-    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
     // mysql 최신버전이니 주의
-    compile("mysql:mysql-connector-java:8.0.21")
+    compile('mysql:mysql-connector-java:8.0.25')
 
     //jstl
     compile('javax.servlet:jstl:1.2')

@@ -5,7 +5,6 @@ import kr.co.nandsoft.member.services.BoardService;
 import kr.co.nandsoft.member.services.MemberService;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,13 +33,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final SqlSessionFactory sqlFactory;
-
     public BoardController(ApplicationContext applicationContext, MemberService service, BoardService boardService, SqlSessionFactory sqlFactory) {
         this.applicationContext = applicationContext;
         this.service = service;
         this.boardService = boardService;
-        this.sqlFactory = sqlFactory;
     }
 // study getMapping 어노테이션을 통해 내가 등록한 빈을 콘솔 창에 얻을 수 있다.
 
