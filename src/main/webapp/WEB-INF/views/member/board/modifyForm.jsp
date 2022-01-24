@@ -49,7 +49,6 @@
             padding:10px;
             text-align: center;
         }
-        }
         body {
             font-family: "Century Gothic", 'Lato', sans-serif;
         }
@@ -78,7 +77,6 @@
             font-size: 1rem;
             letter-spacing: 0.3rem;
             opacity: 0.6;
-        }
         }
 
         .et-hero-tabs-container {
