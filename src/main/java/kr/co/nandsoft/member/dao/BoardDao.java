@@ -13,7 +13,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
-//        System.out.println(beforeTime);
 @Repository
 public class BoardDao implements IBoardDao {
 
@@ -32,26 +31,6 @@ public class BoardDao implements IBoardDao {
         //remember authority 란 관리자의 권한 여부를 말한다. (공지사항 = 0, 나머지 = 1) 본인 글은 본인만 권한을 가지고 관리자는 모든 게시글에 권한이 있다.
         return sessionTemplate.selectOne("countAll", cri);
 
-//        String sql = "SELECT num, memId, title, content, status, authority, hit, writeDate, updateWriteDate, updateId, boardNum FROM board where status = true";
-//
-//        List<Board> boardList = new ArrayList<>();
-//
-//        List<Map<String, Object>> rows = template.queryForList(sql);
-//
-//        for (Map row : rows) {
-//            Board obj = new Board();
-//
-//            obj.setNum((Integer) row.get("num"));
-//            obj.setMemId((String) row.get("memId"));
-//            obj.setTitle((String) row.get("title"));
-//            obj.setContent(((String) row.get("content")));
-//            obj.setWriteDate((Timestamp) row.get("writeDate"));
-//            obj.setUpdateWriteDate((Timestamp) row.get("updateWriteDate"));
-//            obj.setUpdateId((String) row.get("updateId"));
-//            obj.setHit((Integer) row.get("hit"));
-//            boardList.add(obj);
-//        }
-//        return boardList;
     }
 
     @Override

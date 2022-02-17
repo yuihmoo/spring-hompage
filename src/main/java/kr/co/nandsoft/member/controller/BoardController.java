@@ -23,11 +23,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/member/board")
 public class BoardController {
-
     private final ApplicationContext applicationContext;
-
     private final MemberService service;
-
     private final BoardService boardService;
 
     public BoardController(ApplicationContext applicationContext, MemberService service, BoardService boardService, SqlSessionFactory sqlFactory) {
@@ -181,7 +178,7 @@ public class BoardController {
         Board brd = boardService.insertBoard(board);
         request.setAttribute("member", brd);
 
-        return "redirect:listPage";
+        return "redirect:/member/board/listPage";
     }
 
     @RequestMapping(value = "/modifyForm")
@@ -217,13 +214,13 @@ public class BoardController {
         if(board.getTitle() == "" || board.getContent() == "")
             return "member/board/modifyForm";
 
-        return "redirect:listPage";
+        return "redirect:/member/board/listPage";
     }
 
     @RequestMapping("/delete")
     public String delete(Board board) {
         int num = board.getNum();
         boardService.deleteBoard(num);
-        return "redirect:listPage";
+        return "redirect:/member/board/listPage";
     }
 }

@@ -20,8 +20,8 @@
     <p class="board-content-letter">${board.get("content")}</p>
 </div>
 <span>
-    <a class="et-hero-tab" href=/member/board/modify">글 수정</a>
-    <a class="et-hero-tab" href=/member/board/delete">글 삭제</a>
+    <a class="et-hero-tab" href=/member/board/modifyForm>글 수정</a>
+    <a class="et-hero-tab" href=/member/board/delete>글 삭제</a>
 </span>
 </body>
 </html>

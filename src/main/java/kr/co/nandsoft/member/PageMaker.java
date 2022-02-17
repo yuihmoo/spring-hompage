@@ -32,8 +32,8 @@ public class PageMaker {
             endPage = tempEndPage;
 
         }
-        prev = startPage == 1 ? false : true;
-        next = endPage * cri.getPerPageNum() >= totalCount ? false : true;
+        prev = startPage != 1;
+        next = endPage * cri.getPerPageNum() < totalCount;
     }
     //study lombok 기능 중 @toString 을 사용하면 자동으로 만들어준다.
     //study lombok 기능 중 생성자를 자동으로 생성해주는 어노테이션 @NoArgsConstructor(기본 생성자), @AllArgsConstructor(모든 멤버변수 값), @RequiredArgsConstructor(final or @NonNull 인 멤버변수 값)

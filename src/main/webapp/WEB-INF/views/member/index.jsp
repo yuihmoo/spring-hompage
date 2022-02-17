@@ -124,29 +124,3 @@
 </div>
 </body>
 </html>
-<%--<c:if test="${empty member}">--%>
-<%--<section class="et-hero-tabs">--%>
-<%--  <h1>용재의 홈페이지</h1>--%>
-<%--  <h3>아래의 탭을 클릭하여 서비스를 이용하세요.</h3>--%>
-<%--  <div class="et-hero-tabs-container">--%>
-<%--    <a class="et-hero-tab" href="/member/joinForm">JOIN</a>--%>
-<%--    <a class="et-hero-tab" href="/member/loginForm">LOGIN</a>--%>
-<%--    <span class="et-hero-tab-slider"></span>--%>
-<%--  </div>--%>
-<%--</section>--%>
-<%--</c:if>--%>
-
-<%--<c:if test="${!empty member}">--%>
-<%--<section class="et-hero-tabs">--%>
-<%--  <h1>${member.memId}님 환영합니다.</h1>--%>
-<%--  <h3>현재 로그인 시간은 ${serverTime} 입니다.</h3>--%>
-<%--  <div class="et-hero-tabs-container">--%>
-<%--    <a class="et-hero-tab" href="/member/modifyForm">회원정보</a>--%>
-<%--    <a class="et-hero-tab" href="/member/logout">로그아웃</a>--%>
-<%--    <a class="et-hero-tab" href="/member/removeForm">회원탈퇴</a>--%>
-<%--    <a class="et-hero-tab" href="/member/board/listPage">게시판</a>--%>
-<%--    <a class="et-hero-tab" href="/member/board/writeForm">글쓰기</a>--%>
-<%--    <span class="et-hero-tab-slider"></span>--%>
-<%--  </div>--%>
-<%--</section>--%>
-<%--</c:if>--%>
