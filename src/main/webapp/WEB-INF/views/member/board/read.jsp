@@ -11,7 +11,7 @@
 <html>
 <head>
     <title>${board.get("title")}</title>
-    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.2.5">
+    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.3.0">
     <jsp:include page="header.jsp"></jsp:include>
 </head>
 <body>

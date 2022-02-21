@@ -374,26 +374,32 @@ h2 {
         margin: 0 auto;
         float: none;
     }
+
     .col.extrapad {
         padding: 1%;
         margin-bottom: 10px;
     }
+
     .group {
         display: none;
     }
 }
-.content {
-    width: 800px;
-    height: max-content;
-}
 .board-content {
-    width: fit-content;
     align-items: center;
     align-content: center;
     margin-left: 100px;
     margin-right: 100px;
+    margin-top: 10px;
     word-break: keep-all;
+    width: 800px;
+    height: max-content;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
 }
 .board-content-letter {
     word-break: keep-all;
+}
+footer {
+    margin-top: 10px;
 }
