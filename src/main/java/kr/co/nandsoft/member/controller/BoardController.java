@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 //study BoardController 라는 객체에 멤버변수로 logger, ApplicationContext, MemberService, BoardService, SqlSessionFactory(Mybatis) 를 주고, 생성자 하나를 만들어 준다.
 @Controller
@@ -211,7 +212,7 @@ public class BoardController {
         board.setWriteDate(timestamp);
         boardService.modifyBoard(board, member);
 
-        if(board.getTitle() == "" || board.getContent() == "")
+        if(Objects.equals(board.getTitle(), "") || Objects.equals(board.getContent(), ""))
             return "member/board/modifyForm";
 
         return "redirect:/member/board/listPage";
