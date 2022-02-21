@@ -11,17 +11,42 @@
 <html>
 <head>
     <title>${board.get("title")}</title>
-    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.2.1">
+    <link rel="stylesheet" type="text/css" href="/css/read.css?version=1.2.5">
+    <jsp:include page="header.jsp"></jsp:include>
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
-<h1 id="page-title">제목 : ${board.get("title")}</h1>
-<div class="board-content">
-    <p class="board-content-letter">${board.get("content")}</p>
+<div class="container">
+    <header>
+        <h1>${board.get("title")}</h1>
+    </header>
+    <section class="board-content-letter">
+        <nav>
+            <ul>
+                작성자 : ${board.get("memId")}
+            </ul>
+            <ul>
+                작성일 : <br/>${board.get("writeDate")}
+            </ul>
+            <ul>
+                최근 수정일 : <br/>${board.get("updateWriteDate")}
+            </ul>
+            <ul>
+                조회수 : ${board.get("hit")}
+            </ul>
+        </nav>
+        <main class="board-content">
+            ${board.get("content")}
+        </main>
+    </section>
+    <footer>
+        <div>
+            <a class="et-hero-tab" href="/member/board/modifyForm?num=${board.get("num")}">수정</a>
+            <a class="et-hero-tab" href="/member/board/delete?num=${board.get("num")}">삭제</a>
+            <a class="et-hero-tab" href="/">MAIN</a>
+            <a class="et-hero-tab" href="/member/board/listPage">목록</a>
+            <span class="et-hero-tab-slider"></span>
+        </div>
+    </footer>
 </div>
-<span>
-    <a class="et-hero-tab" href=/member/board/modifyForm>글 수정</a>
-    <a class="et-hero-tab" href=/member/board/delete>글 삭제</a>
-</span>
 </body>
 </html>
