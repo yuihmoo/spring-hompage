@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -109,11 +108,10 @@ public class BoardController {
 
 
     @RequestMapping("/read")
-    public ModelAndView read(Board board, HttpSession session, Member member,
-                             HttpServletResponse response, HttpServletRequest request){
+    public ModelAndView read(Board board, HttpSession session){
 
         ModelAndView mav = new ModelAndView();
-        member = (Member) session.getAttribute("member");
+        Member member = (Member) session.getAttribute("member");
 
         if (member == null) {
             mav.setViewName("member/loginForm");
@@ -163,9 +161,9 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/write", method = RequestMethod.POST)
-    public String write(@ModelAttribute("board") Board board, HttpServletRequest request, Member member, HttpSession session) {
+    public String write(@ModelAttribute("board") Board board, HttpServletRequest request, HttpSession session) {
         //remember 글을 쓸때 Write_date 값도 set
-        member = (Member) session.getAttribute("member");
+        Member member = (Member) session.getAttribute("member");
 
         if(board.getTitle().trim().length() == 0 || board.getContent().trim().length() == 0)
         {
@@ -183,10 +181,10 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/modifyForm")
-    public ModelAndView modifyForm(Board board, Member member, HttpSession session) {
+    public ModelAndView modifyForm(Board board, HttpSession session) {
 
         ModelAndView mav = new ModelAndView();
-        member = (Member) session.getAttribute("member");
+        Member member = (Member) session.getAttribute("member");
 
         if(member == null) {
             mav.setViewName("member/loginForm");
@@ -211,6 +209,7 @@ public class BoardController {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         board.setWriteDate(timestamp);
         boardService.modifyBoard(board, member);
+        session.setAttribute("member", member);
 
         if(Objects.equals(board.getTitle(), "") || Objects.equals(board.getContent(), ""))
             return "member/board/modifyForm";
@@ -218,10 +217,16 @@ public class BoardController {
         return "redirect:/member/board/listPage";
     }
 
+    /**
+     * 2022-02-04 : 삭제 할때 아이디 검증 추가
+     * @param board
+     * @return
+     */
     @RequestMapping("/delete")
-    public String delete(Board board) {
+    public String delete(Board board, HttpSession session) {
         int num = board.getNum();
-        boardService.deleteBoard(num);
+        Member member = (Member) session.getAttribute("member");
+        boardService.deleteBoard(num, member);
         return "redirect:/member/board/listPage";
     }
 }

@@ -14,7 +14,7 @@ public interface IBoardDao {
     int insertBoard(Board board);
     Map<String, Object> readBoard(int num);
     void modifyBoard(Board board, Member member);
-    void deleteBoard(int Num);
+    void deleteBoard(int Num, Member member);
     void hitBoard(Board board);
     void insertRecord(Board board);
     void selectRecord(BoardRecord boardRecord, Board board);

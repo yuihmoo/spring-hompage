@@ -68,14 +68,13 @@ public class BoardDao implements IBoardDao {
 
     @Override
     public void modifyBoard(Board board, Member member) {
-        int result = 0;
         //remember 같은 값일 때를 대비해 한번 초기화
         this.template.update(
-                "UPDATE board SET updateId = 1 WHERE num = ?", board.getNum());
+                "UPDATE board SET updateId = ? WHERE num = ?", member.getMemId(), board.getNum());
 
-        final String sql = "UPDATE board SET title = ?, content = ?, updateWriteDate = ?, updateId = ? WHERE Num = ?";
+        String sql = "UPDATE board SET title = ?, content = ?, updateWriteDate = ?, updateId = ? WHERE Num = ?";
 
-        result = template.update(sql, pstmt -> {
+        template.update(sql, pstmt -> {
             pstmt.setString(1, board.getTitle());
             pstmt.setString(2, board.getContent());
             pstmt.setTimestamp(3, board.getWriteDate());
@@ -85,13 +84,13 @@ public class BoardDao implements IBoardDao {
     }
     //todo 단순히 데이터를 삭제 하는것이 아니라 Delete 삭제에 대한 고민이 필요함. (실제로 DB 삭제는 속도면에서 느리고 삭제된 데이터도 보관해야함.)
     @Override
-    public void deleteBoard(int Num) {
+    public void deleteBoard(int Num, Member member) {
         //remember 게시물 삭제 테이블로 복사 해놓고 , v1.2 테이블 수정 작업으로 delete_board 테이블 삭제
 //        this.template.update(
 //                "insert into delete_board select * from board where Num = ?", Num);
         //remember 실제 게시물 테이블에 삭제, v1.2 status = false 값으로 비활성화 상태 설정
         this.template.update(
-                "UPDATE board SET status = false WHERE Num = ?", Num);
+                "UPDATE board SET status = false WHERE Num = ? AND memid = ?", Num, member.getMemId());
     }
 
     @Override

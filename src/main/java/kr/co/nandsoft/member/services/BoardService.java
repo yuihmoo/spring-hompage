@@ -45,8 +45,8 @@ public class BoardService implements IBoardService{
     }
 
     @Override
-    public void deleteBoard(int Num) {
-        dao.deleteBoard(Num);
+    public void deleteBoard(int Num, Member member) {
+        dao.deleteBoard(Num, member);
     }
     @Override
     public void hit(Board board) {

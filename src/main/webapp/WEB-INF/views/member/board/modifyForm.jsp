@@ -20,7 +20,7 @@
 
             const form = document.createElement('form');
             form.setAttribute('method', 'post');
-            form.setAttribute('action', "/member/board/modify");
+            form.setAttribute('action', "/member/board/modify?num=${board.get("num")}");
             document.charset = "utf-8";
 
 
@@ -34,7 +34,7 @@
             contentHiddenField.setAttribute('type', 'hidden');
             contentHiddenField.setAttribute('name', 'content' );
             const contentValue = getContent();
-            contentHiddenField.setAttribute('value', contentValue );
+            contentHiddenField.setAttribute('value', contentValue )
 
             form.appendChild(titleHiddenField);
             form.appendChild(contentHiddenField);
@@ -51,12 +51,13 @@
     <div class="slider">
         <div class="container slidercontent">
             <div id="board-write">
-                <div name="memId">아이디 : ${member.memId}</div>
+                <div id="memId" name="memId">작성자 : ${board.get("memid")}</div>
+                <div id="num" name="num">게시물 번호 : ${board.get("num")}</div>
                 <br/>
                 <div>제목 : <input type="text" id="board-title" name="title" value="${board.get("title")}"></div>
                 <script src="${pageContext.request.contextPath}/util/ckeditor/ckeditor.js"></script>
                 <p>내 용</p>
-                <textarea name="board-content" id="editor">${board.get("content")}</textarea>
+                <textarea name="content" id="editor">${board.get("content")}</textarea>
             </div>
             <div>
                 <input type="button" value="완료" onclick="sendPost()">
